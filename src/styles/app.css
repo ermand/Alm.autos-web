@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+/*
+ * Warm and local. The maroon is carried over from the old site's WhatsApp widget
+ * (#6b1122) and is the one piece of the previous palette worth keeping; the
+ * lilac it sat next to read as a template default and is gone. Sand and
+ * terracotta do the warming.
+ */
+@theme {
+  --color-maroon-50: #fdf3f4;
+  --color-maroon-100: #fbe3e6;
+  --color-maroon-200: #f6cbd1;
+  --color-maroon-400: #c9536a;
+  --color-maroon-600: #8d1a2e;
+  --color-maroon-700: #6b1122;
+  --color-maroon-900: #400a15;
+
+  --color-sand-50: #fbf8f4;
+  --color-sand-100: #f4ece1;
+  --color-sand-200: #e8dac7;
+  --color-sand-300: #d8c3a5;
+
+  --color-terracotta-500: #c2643a;
+  --color-terracotta-600: #a44f2c;
+
+  --color-ink-500: #6b625c;
+  --color-ink-700: #3a322e;
+  --color-ink-900: #1c1614;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-sand-50);
+    color: var(--color-ink-900);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  /* Visible focus everywhere; the old site had none at all. */
+  :focus-visible {
+    outline: 2px solid var(--color-maroon-600);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    /* biome-ignore lint/complexity/noImportantStyles: must beat utility and inline animation styles. */
+    animation-duration: 0.01ms !important;
+    /* biome-ignore lint/complexity/noImportantStyles: must beat utility and inline transition styles. */
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,402 @@
+[
+  {
+    "slug": "peugeot-301-2017",
+    "model": "Peugeot 301",
+    "year": 2017,
+    "transmission": null,
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 3000,
+      "4-7": 3000,
+      "8-29": 3000,
+      "30+": 3000
+    },
+    "photos": ["qera1.jpeg"]
+  },
+  {
+    "slug": "kia-sportage-2013",
+    "model": "Kia Sportage",
+    "year": 2013,
+    "transmission": null,
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 4000,
+      "4-7": 4000,
+      "8-29": 4000,
+      "30+": 4000
+    },
+    "photos": ["qera8.jpeg"]
+  },
+  {
+    "slug": "dacia-duster-2013",
+    "model": "Dacia Duster",
+    "year": 2013,
+    "transmission": null,
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 3200,
+      "4-7": 3200,
+      "8-29": 3200,
+      "30+": 3200
+    },
+    "photos": ["qera3.jpeg"]
+  },
+  {
+    "slug": "vw-golf-6-plus-2010",
+    "model": "VW Golf 6 Plus",
+    "year": 2010,
+    "transmission": null,
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 2800,
+      "4-7": 2800,
+      "8-29": 2800,
+      "30+": 2800
+    },
+    "photos": ["qera5.jpeg"]
+  },
+  {
+    "slug": "toyota-corolla-2005",
+    "model": "Toyota Corolla",
+    "year": 2005,
+    "transmission": null,
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 2500,
+      "4-7": 2500,
+      "8-29": 2500,
+      "30+": 2500
+    },
+    "photos": ["qera6.jpeg"]
+  },
+  {
+    "slug": "ford-ranger-2018",
+    "model": "Ford Ranger",
+    "year": 2018,
+    "transmission": "manual",
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 6500,
+      "4-7": 6500,
+      "8-29": 6500,
+      "30+": 6500
+    },
+    "photos": ["qera7.jpeg"]
+  },
+  {
+    "slug": "suzuki-vitara-4x4-2018",
+    "model": "Suzuki Vitara 4x4",
+    "year": 2018,
+    "transmission": null,
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 3800,
+      "4-7": 3800,
+      "8-29": 3800,
+      "30+": 3800
+    },
+    "photos": ["qera9.jpeg"]
+  },
+  {
+    "slug": "vw-touran-2005",
+    "model": "VW Touran",
+    "year": 2005,
+    "transmission": null,
+    "seats": 7,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 3300,
+      "4-7": 3300,
+      "8-29": 3300,
+      "30+": 3300
+    },
+    "photos": ["qera10.jpeg"]
+  },
+  {
+    "slug": "bmw-x3-2006",
+    "model": "BMW X3",
+    "year": 2006,
+    "transmission": null,
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 3600,
+      "4-7": 3600,
+      "8-29": 3600,
+      "30+": 3600
+    },
+    "photos": ["qera11.jpeg"]
+  },
+  {
+    "slug": "skoda-citigo-2014",
+    "model": "Skoda Citigo",
+    "year": 2014,
+    "transmission": "automatic",
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 2900,
+      "4-7": 2900,
+      "8-29": 2900,
+      "30+": 2900
+    },
+    "photos": ["qera12.jpeg"]
+  },
+  {
+    "slug": "audi-a4-2006",
+    "model": "Audi A4",
+    "year": 2006,
+    "transmission": null,
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 3000,
+      "4-7": 3000,
+      "8-29": 3000,
+      "30+": 3000
+    },
+    "photos": ["qera13.jpeg"]
+  },
+  {
+    "slug": "peugeot-boxer-van-2018",
+    "model": "Peugeot Boxer Van",
+    "year": 2018,
+    "transmission": "manual",
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 8000,
+      "4-7": 8000,
+      "8-29": 8000,
+      "30+": 8000
+    },
+    "photos": ["qera14.jpeg"]
+  },
+  {
+    "slug": "ford-focus-2012",
+    "model": "Ford Focus",
+    "year": 2012,
+    "transmission": "manual",
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 2800,
+      "4-7": 2800,
+      "8-29": 2800,
+      "30+": 2800
+    },
+    "photos": ["qera15.jpeg"]
+  },
+  {
+    "slug": "jeep-2018",
+    "model": "Jeep",
+    "year": 2018,
+    "transmission": "automatic",
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 4000,
+      "4-7": 4000,
+      "8-29": 4000,
+      "30+": 4000
+    },
+    "photos": ["qera16.jpeg"]
+  },
+  {
+    "slug": "ford-kuga-2012",
+    "model": "Ford Kuga",
+    "year": 2012,
+    "transmission": "automatic",
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 3500,
+      "4-7": 3500,
+      "8-29": 3500,
+      "30+": 3500
+    },
+    "photos": ["qera17.jpeg"]
+  },
+  {
+    "slug": "audi-q5-2012",
+    "model": "Audi Q5",
+    "year": 2012,
+    "transmission": "automatic",
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 4500,
+      "4-7": 4500,
+      "8-29": 4500,
+      "30+": 4500
+    },
+    "photos": ["qera18.jpeg"]
+  },
+  {
+    "slug": "mercedes-benz-b-2013",
+    "model": "Mercedes-Benz B",
+    "year": 2013,
+    "transmission": "automatic",
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 3800,
+      "4-7": 3800,
+      "8-29": 3800,
+      "30+": 3800
+    },
+    "photos": ["qera19.jpeg"]
+  },
+  {
+    "slug": "skoda-yeti-2010",
+    "model": "Skoda Yeti",
+    "year": 2010,
+    "transmission": "manual",
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 3200,
+      "4-7": 3200,
+      "8-29": 3200,
+      "30+": 3200
+    },
+    "photos": ["qera20.jpeg"]
+  },
+  {
+    "slug": "mercedes-benz-vito-2008",
+    "model": "Mercedes-Benz Vito",
+    "year": 2008,
+    "transmission": "automatic",
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 6700,
+      "4-7": 6700,
+      "8-29": 6700,
+      "30+": 6700
+    },
+    "photos": ["qera21.jpeg"]
+  },
+  {
+    "slug": "audi-q7-2008",
+    "model": "Audi Q7",
+    "year": 2008,
+    "transmission": null,
+    "seats": 7,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 4400,
+      "4-7": 4400,
+      "8-29": 4400,
+      "30+": 4400
+    },
+    "photos": ["qera22.jpeg"]
+  },
+  {
+    "slug": "peugeot-301-2019",
+    "model": "Peugeot 301",
+    "year": 2019,
+    "transmission": "manual",
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 3000,
+      "4-7": 3000,
+      "8-29": 3000,
+      "30+": 3000
+    },
+    "photos": ["qera23.jpeg"]
+  },
+  {
+    "slug": "mercedes-benz-slk-2010",
+    "model": "Mercedes-Benz SLK",
+    "year": 2010,
+    "transmission": "automatic",
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 5000,
+      "4-7": 5000,
+      "8-29": 5000,
+      "30+": 5000
+    },
+    "photos": ["qera24.jpeg"]
+  },
+  {
+    "slug": "citroen-c5-2014",
+    "model": "Citroen C5",
+    "year": 2014,
+    "transmission": "automatic",
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 3500,
+      "4-7": 3500,
+      "8-29": 3500,
+      "30+": 3500
+    },
+    "photos": ["qera25.jpeg"]
+  },
+  {
+    "slug": "skoda-octavia-2015",
+    "model": "Skoda Octavia",
+    "year": 2015,
+    "transmission": "automatic",
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 3500,
+      "4-7": 3500,
+      "8-29": 3500,
+      "30+": 3500
+    },
+    "photos": ["qera26.jpeg"]
+  },
+  {
+    "slug": "ford-fiesta-2016",
+    "model": "Ford Fiesta",
+    "year": 2016,
+    "transmission": "automatic",
+    "seats": null,
+    "fuel": null,
+    "bodyType": null,
+    "baseRates": {
+      "1-3": 3200,
+      "4-7": 3200,
+      "8-29": 3200,
+      "30+": 3200
+    },
+    "photos": ["qera27.jpeg"]
+  }
+]

@@ -1,0 +1,14 @@
+node_modules
+.output
+.nitro
+.tanstack
+.vite
+dist
+*.log
+.env
+.env.local
+.DS_Store
+src/routeTree.gen.ts
+public/vehicles
+public/sitemap.xml
+public/robots.txt
