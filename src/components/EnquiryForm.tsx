@@ -53,7 +53,7 @@ export function EnquiryForm({ locale, vehicleSlug }: Props) {
 
   if (state === "sent") {
     return (
-      <p role="status" className="rounded-2xl bg-maroon-50 p-6 text-ink-900">
+      <p role="status" className="rounded-2xl bg-brand-50 p-6 text-ink-900">
         {t.enquiry.success}
       </p>
     );
@@ -78,7 +78,7 @@ export function EnquiryForm({ locale, vehicleSlug }: Props) {
       </label>
 
       {problem ? (
-        <p role="alert" className="text-sm text-maroon-600 sm:col-span-2">
+        <p role="alert" className="text-sm text-brand-600 sm:col-span-2">
           {problem}
         </p>
       ) : null}
@@ -89,7 +89,7 @@ export function EnquiryForm({ locale, vehicleSlug }: Props) {
         <button
           type="submit"
           disabled={state === "sending"}
-          className="rounded-full bg-maroon-700 px-6 py-3 font-medium text-white transition-colors hover:bg-maroon-600 disabled:opacity-60"
+          className="rounded-full bg-brand-500 px-6 py-3 font-medium text-white transition-colors hover:bg-brand-600 disabled:opacity-60"
         >
           {state === "sending" ? t.enquiry.sending : t.enquiry.submit}
         </button>

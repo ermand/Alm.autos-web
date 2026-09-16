@@ -83,7 +83,7 @@ function EnquiriesPage() {
             <li
               key={enquiry.id}
               className={`rounded-2xl border bg-white p-4 ${
-                enquiry.handledAt ? "border-sand-200 opacity-70" : "border-maroon-200"
+                enquiry.handledAt ? "border-sand-200 opacity-70" : "border-brand-200"
               }`}
             >
               <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -92,11 +92,11 @@ function EnquiriesPage() {
               </div>
 
               <p className="mt-1 text-sm text-ink-700">
-                <a href={`tel:${enquiry.phone.replace(/[^\d+]/g, "")}`} className="text-maroon-700">
+                <a href={`tel:${enquiry.phone.replace(/[^\d+]/g, "")}`} className="text-brand-500">
                   {enquiry.phone}
                 </a>
                 {" · "}
-                <a href={`mailto:${enquiry.email}`} className="text-maroon-700">
+                <a href={`mailto:${enquiry.email}`} className="text-brand-500">
                   {enquiry.email}
                 </a>
               </p>
@@ -118,7 +118,7 @@ function EnquiriesPage() {
               <div className="mt-3 flex flex-wrap gap-2">
                 <a
                   href={`https://wa.me/${enquiry.phone.replace(/\D/g, "")}`}
-                  className="rounded-full border border-sand-200 px-3 py-1.5 text-sm text-ink-700 hover:border-maroon-400"
+                  className="rounded-full border border-sand-200 px-3 py-1.5 text-sm text-ink-700 hover:border-brand-400"
                 >
                   {t.enquiries.whatsapp}
                 </a>

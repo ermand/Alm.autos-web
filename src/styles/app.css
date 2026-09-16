@@ -2,27 +2,31 @@
 @import "./fonts.css";
 
 /*
- * Warm and local. The maroon is carried over from the old site's WhatsApp widget
- * (#6b1122) and is the one piece of the previous palette worth keeping; the
- * lilac it sat next to read as a template default and is gone. Sand and
- * terracotta do the warming.
+ * The palette is taken from the logo, not invented.
+ *
+ * scripts/build-logo.ts measures legacy/Logo1.jpeg: the mark is #c92c2e red on
+ * black, and that red is the primary here. The previous maroon came from the
+ * old WhatsApp widget and matched nothing the company actually uses.
+ *
+ * brand-500 is the logo red exactly. White on it is 5.4:1 and it is 5.1:1 on
+ * the sand background, so it clears AA for body text in both directions and
+ * does not need a darker stand-in for text.
  */
 @theme {
-  --color-maroon-50: #fdf3f4;
-  --color-maroon-100: #fbe3e6;
-  --color-maroon-200: #f6cbd1;
-  --color-maroon-400: #c9536a;
-  --color-maroon-600: #8d1a2e;
-  --color-maroon-700: #6b1122;
-  --color-maroon-900: #400a15;
+  --color-brand-50: #fcf2f2;
+  --color-brand-100: #f8e4e4;
+  --color-brand-200: #f0c4c4;
+  --color-brand-400: #da7071;
+  --color-brand-500: #c92c2e;
+  --color-brand-600: #ad2628;
+  --color-brand-700: #8d1f20;
+  --color-brand-900: #4c1111;
 
+  /* Warm neutrals, so the red reads as deliberate rather than as an alert. */
   --color-sand-50: #fbf8f4;
   --color-sand-100: #f4ece1;
   --color-sand-200: #e8dac7;
   --color-sand-300: #d8c3a5;
-
-  --color-terracotta-500: #c2643a;
-  --color-terracotta-600: #a44f2c;
 
   --color-ink-500: #6b625c;
   --color-ink-700: #3a322e;
@@ -54,7 +58,7 @@
 
   /* Visible focus everywhere; the old site had none at all. */
   :focus-visible {
-    outline: 2px solid var(--color-maroon-600);
+    outline: 2px solid var(--color-brand-600);
     outline-offset: 2px;
   }
 }

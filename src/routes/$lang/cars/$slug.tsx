@@ -84,7 +84,7 @@ function VehiclePage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <Link to={localePath(locale, "cars")} className="text-sm text-maroon-700 hover:underline">
+      <Link to={localePath(locale, "cars")} className="text-sm text-brand-500 hover:underline">
         ← {t.vehicle.back}
       </Link>
 
@@ -101,7 +101,7 @@ function VehiclePage() {
             {hasTieredPricing(vehicle.baseRates) ? (
               <span className="text-xs uppercase tracking-wide text-ink-500">{t.fleet.from} </span>
             ) : null}
-            <span className="font-display text-3xl text-maroon-700">
+            <span className="font-display text-3xl text-brand-500">
               {formatEuros(fromPriceCents(vehicle.baseRates), locale)}
             </span>
             <span className="text-ink-500">{t.fleet.perDay}</span>
@@ -110,13 +110,13 @@ function VehiclePage() {
           <div className="mt-6 flex flex-wrap gap-3">
             <a
               href={whatsappLink(settings, prefill)}
-              className="rounded-full bg-maroon-700 px-6 py-3 font-medium text-white hover:bg-maroon-600"
+              className="rounded-full bg-brand-500 px-6 py-3 font-medium text-white hover:bg-brand-600"
             >
               {t.home.whatsapp}
             </a>
             <a
               href="#enquire"
-              className="rounded-full border border-maroon-700 px-6 py-3 font-medium text-maroon-700 hover:bg-maroon-50"
+              className="rounded-full border border-brand-500 px-6 py-3 font-medium text-brand-500 hover:bg-brand-50"
             >
               {t.vehicle.enquire}
             </a>

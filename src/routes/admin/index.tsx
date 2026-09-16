@@ -51,7 +51,7 @@ function VehiclesPage() {
         <h1 className="font-display text-2xl text-ink-900">{t.vehicles.title}</h1>
         <Link
           to="/admin/vehicles/new"
-          className="rounded-full bg-maroon-700 px-5 py-2.5 font-medium text-white hover:bg-maroon-600"
+          className="rounded-full bg-brand-500 px-5 py-2.5 font-medium text-white hover:bg-brand-600"
         >
           {t.vehicles.add}
         </Link>
@@ -96,7 +96,7 @@ function VehiclesPage() {
                     <Link
                       to="/admin/vehicles/$id"
                       params={{ id: vehicle.id }}
-                      className="font-medium text-ink-900 hover:text-maroon-700"
+                      className="font-medium text-ink-900 hover:text-brand-500"
                     >
                       {vehicle.model}
                     </Link>

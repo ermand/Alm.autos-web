@@ -104,7 +104,7 @@ export function Checkbox({
         type="checkbox"
         name={name}
         defaultChecked={defaultChecked}
-        className="h-5 w-5 rounded border-sand-300 accent-maroon-700"
+        className="h-5 w-5 rounded border-sand-300 accent-brand-500"
       />
       <span className="text-sm text-ink-700">{label}</span>
     </label>
@@ -127,7 +127,7 @@ export function PrimaryButton({
       type={type === "submit" ? "submit" : "button"}
       disabled={disabled}
       onClick={onClick}
-      className="rounded-full bg-maroon-700 px-6 py-3 font-medium text-white hover:bg-maroon-600 disabled:opacity-60"
+      className="rounded-full bg-brand-500 px-6 py-3 font-medium text-white hover:bg-brand-600 disabled:opacity-60"
     >
       {children}
     </button>
@@ -152,8 +152,8 @@ export function QuietButton({
       disabled={disabled}
       className={`rounded-full border px-3 py-1.5 text-sm disabled:opacity-40 ${
         danger
-          ? "border-maroon-200 text-maroon-600 hover:border-maroon-400"
-          : "border-sand-200 text-ink-700 hover:border-maroon-400"
+          ? "border-brand-200 text-brand-600 hover:border-brand-400"
+          : "border-sand-200 text-ink-700 hover:border-brand-400"
       }`}
     >
       {children}
@@ -166,7 +166,7 @@ export function Notice({ tone, children }: { tone: "ok" | "error"; children: Rea
     <p
       role={tone === "error" ? "alert" : "status"}
       className={`rounded-xl px-4 py-3 text-sm ${
-        tone === "error" ? "bg-maroon-50 text-maroon-700" : "bg-sand-100 text-ink-700"
+        tone === "error" ? "bg-brand-50 text-brand-500" : "bg-sand-100 text-ink-700"
       }`}
     >
       {children}

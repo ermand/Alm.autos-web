@@ -15,12 +15,16 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "theme-color", content: "#6b1122" },
+      { name: "theme-color", content: "#c92c2e" },
       { title: "ALM Autos — Rent a car in Tirana" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      // The client's own mark, cut out of legacy/Logo1.jpeg by
+      // scripts/build-logo.ts. At tab size it reads as a red hexagon, which is
+      // exactly how the company is recognised.
+      { rel: "icon", href: "/brand/favicon-32.png", type: "image/png", sizes: "32x32" },
+      { rel: "apple-touch-icon", href: "/brand/apple-touch-icon.png", sizes: "180x180" },
       // Fonts are self-hosted (src/styles/fonts.css). No third-party request is
       // made on any page, which is what the privacy page promises.
       {
@@ -71,7 +75,7 @@ function RootDocument({ children }: { children: ReactNode }) {
       <body>
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-maroon-700 focus:px-4 focus:py-2 focus:text-white"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-brand-500 focus:px-4 focus:py-2 focus:text-white"
         >
           Skip to content
         </a>

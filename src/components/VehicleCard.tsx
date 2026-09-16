@@ -58,7 +58,7 @@ export function VehicleCard({ vehicle, locale, priority }: Props) {
             {hasTieredPricing(vehicle.baseRates) ? (
               <span className="text-xs uppercase tracking-wide text-ink-500">{t.fleet.from} </span>
             ) : null}
-            <span className="font-display text-xl text-maroon-700">
+            <span className="font-display text-xl text-brand-500">
               {formatEuros(fromPriceCents(vehicle.baseRates), locale)}
             </span>
             <span className="text-sm text-ink-500">{t.fleet.perDay}</span>

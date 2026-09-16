@@ -82,7 +82,7 @@ function FleetPage() {
           <Link
             to="."
             search={{}}
-            className="rounded-full px-3 py-1.5 text-sm text-maroon-700 underline"
+            className="rounded-full px-3 py-1.5 text-sm text-brand-500 underline"
           >
             {t.fleet.filters.reset}
           </Link>
@@ -131,8 +131,8 @@ function FilterGroup({ label, options, active, toKey }: FilterGroupProps) {
             aria-pressed={selected}
             className={
               selected
-                ? "rounded-full bg-maroon-700 px-3 py-1.5 text-sm text-white"
-                : "rounded-full border border-sand-200 bg-white px-3 py-1.5 text-sm text-ink-700 hover:border-maroon-400"
+                ? "rounded-full bg-brand-500 px-3 py-1.5 text-sm text-white"
+                : "rounded-full border border-sand-200 bg-white px-3 py-1.5 text-sm text-ink-700 hover:border-brand-400"
             }
           >
             {option.label}

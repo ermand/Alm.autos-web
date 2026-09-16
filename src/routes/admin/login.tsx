@@ -68,7 +68,7 @@ function LoginPage() {
         </label>
 
         {problem ? (
-          <p role="alert" className="text-sm text-maroon-600">
+          <p role="alert" className="text-sm text-brand-600">
             {problem}
           </p>
         ) : null}
@@ -76,7 +76,7 @@ function LoginPage() {
         <button
           type="submit"
           disabled={busy}
-          className="rounded-full bg-maroon-700 px-6 py-3 font-medium text-white hover:bg-maroon-600 disabled:opacity-60"
+          className="rounded-full bg-brand-500 px-6 py-3 font-medium text-white hover:bg-brand-600 disabled:opacity-60"
         >
           {busy ? t.login.working : t.login.submit}
         </button>

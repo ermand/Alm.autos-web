@@ -26,12 +26,12 @@ function ContactPage() {
             <br />
             {settings.city}
           </p>
-          <a href={telLink(settings)} className="mt-4 block font-display text-2xl text-maroon-700">
+          <a href={telLink(settings)} className="mt-4 block font-display text-2xl text-brand-500">
             {settings.phone}
           </a>
           <a
             href={whatsappLink(settings)}
-            className="mt-4 inline-block rounded-full bg-maroon-700 px-6 py-3 font-medium text-white hover:bg-maroon-600"
+            className="mt-4 inline-block rounded-full bg-brand-500 px-6 py-3 font-medium text-white hover:bg-brand-600"
           >
             {t.home.whatsapp}
           </a>

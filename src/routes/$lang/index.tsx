@@ -48,13 +48,13 @@ function HomePage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 to={localePath(locale, "cars")}
-                className="rounded-full bg-maroon-700 px-6 py-3 font-medium text-white transition-colors hover:bg-maroon-600"
+                className="rounded-full bg-brand-500 px-6 py-3 font-medium text-white transition-colors hover:bg-brand-600"
               >
                 {t.home.cta}
               </Link>
               <a
                 href={whatsappLink(settings)}
-                className="rounded-full border border-maroon-700 px-6 py-3 font-medium text-maroon-700 transition-colors hover:bg-maroon-50"
+                className="rounded-full border border-brand-500 px-6 py-3 font-medium text-brand-500 transition-colors hover:bg-brand-50"
               >
                 {t.home.whatsapp}
               </a>
@@ -62,7 +62,7 @@ function HomePage() {
 
             <a
               href={telLink(settings)}
-              className="mt-6 inline-block font-display text-xl text-maroon-700 hover:underline"
+              className="mt-6 inline-block font-display text-xl text-brand-500 hover:underline"
             >
               {settings.phone}
             </a>
@@ -81,7 +81,7 @@ function HomePage() {
         <ol className="mt-8 grid gap-6 sm:grid-cols-3">
           {t.home.steps.map((step, index) => (
             <li key={step.title} className="rounded-2xl border border-sand-200 bg-white p-6">
-              <span className="font-display text-3xl text-terracotta-500">{index + 1}</span>
+              <span className="font-display text-3xl text-brand-500">{index + 1}</span>
               <h3 className="mt-3 font-display text-lg text-ink-900">{step.title}</h3>
               <p className="mt-2 text-sm text-ink-500">{step.body}</p>
             </li>
@@ -92,7 +92,7 @@ function HomePage() {
       <section className="mx-auto max-w-6xl px-4 pb-16">
         <div className="flex items-baseline justify-between gap-4">
           <h2 className="font-display text-2xl text-ink-900">{t.fleet.title}</h2>
-          <Link to={localePath(locale, "cars")} className="text-sm text-maroon-700 hover:underline">
+          <Link to={localePath(locale, "cars")} className="text-sm text-brand-500 hover:underline">
             {t.home.cta}
           </Link>
         </div>

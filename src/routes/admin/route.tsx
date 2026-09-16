@@ -31,7 +31,14 @@ function AdminLayout() {
     <div className="min-h-screen bg-sand-50">
       <header className="border-b border-sand-200 bg-white">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-5 gap-y-2 px-4 py-3">
-          <span className="font-display text-lg text-maroon-700">
+          <span className="flex items-center gap-2 font-display text-lg text-brand-500">
+            <img
+              src="/brand/logo-96.png"
+              alt=""
+              width={28}
+              height={28}
+              className="h-7 w-7 object-contain"
+            />
             {t.brand} <span className="text-ink-500">{t.admin}</span>
           </span>
 
@@ -41,42 +48,42 @@ function AdminLayout() {
                 <Link
                   to="/admin"
                   activeOptions={{ exact: true }}
-                  activeProps={{ className: "text-maroon-700 font-medium" }}
-                  className="text-ink-700 hover:text-maroon-700"
+                  activeProps={{ className: "text-brand-500 font-medium" }}
+                  className="text-ink-700 hover:text-brand-500"
                 >
                   {t.nav.vehicles}
                 </Link>
                 <Link
                   to="/admin/seasons"
-                  activeProps={{ className: "text-maroon-700 font-medium" }}
-                  className="text-ink-700 hover:text-maroon-700"
+                  activeProps={{ className: "text-brand-500 font-medium" }}
+                  className="text-ink-700 hover:text-brand-500"
                 >
                   {t.nav.seasons}
                 </Link>
                 <Link
                   to="/admin/enquiries"
-                  activeProps={{ className: "text-maroon-700 font-medium" }}
-                  className="text-ink-700 hover:text-maroon-700"
+                  activeProps={{ className: "text-brand-500 font-medium" }}
+                  className="text-ink-700 hover:text-brand-500"
                 >
                   {t.nav.enquiries}
                 </Link>
                 <Link
                   to="/admin/settings"
-                  activeProps={{ className: "text-maroon-700 font-medium" }}
-                  className="text-ink-700 hover:text-maroon-700"
+                  activeProps={{ className: "text-brand-500 font-medium" }}
+                  className="text-ink-700 hover:text-brand-500"
                 >
                   {t.nav.settings}
                 </Link>
               </nav>
 
               <div className="ml-auto flex items-center gap-4 text-sm">
-                <a href="/sq" className="text-ink-500 hover:text-maroon-700">
+                <a href="/sq" className="text-ink-500 hover:text-brand-500">
                   {t.nav.viewSite}
                 </a>
                 <button
                   type="button"
                   onClick={onLogout}
-                  className="rounded-full border border-sand-200 px-3 py-1.5 text-ink-700 hover:border-maroon-400"
+                  className="rounded-full border border-sand-200 px-3 py-1.5 text-ink-700 hover:border-brand-400"
                 >
                   {t.nav.logout}
                 </button>

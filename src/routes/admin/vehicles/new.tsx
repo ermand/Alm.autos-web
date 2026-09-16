@@ -18,7 +18,7 @@ function NewVehiclePage() {
 
   return (
     <>
-      <Link to="/admin" className="text-sm text-maroon-700 hover:underline">
+      <Link to="/admin" className="text-sm text-brand-500 hover:underline">
         ← {t.vehicle.back}
       </Link>
       <h1 className="mt-3 mb-6 font-display text-2xl text-ink-900">{t.vehicle.newTitle}</h1>

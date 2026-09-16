@@ -21,7 +21,7 @@ function EditVehiclePage() {
   if (!vehicle) {
     return (
       <>
-        <Link to="/admin" className="text-sm text-maroon-700 hover:underline">
+        <Link to="/admin" className="text-sm text-brand-500 hover:underline">
           ← {t.vehicle.back}
         </Link>
         <p className="mt-6 text-ink-700">{t.genericError}</p>
@@ -62,7 +62,7 @@ function EditVehiclePage() {
 
   return (
     <>
-      <Link to="/admin" className="text-sm text-maroon-700 hover:underline">
+      <Link to="/admin" className="text-sm text-brand-500 hover:underline">
         ← {t.vehicle.back}
       </Link>
       <h1 className="mt-3 mb-6 font-display text-2xl text-ink-900">

@@ -115,7 +115,7 @@ export function PhotoManager({ vehicleId, photos }: Props) {
         </ul>
       ) : null}
 
-      <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-maroon-700 px-5 py-2.5 font-medium text-maroon-700 hover:bg-maroon-50">
+      <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-brand-500 px-5 py-2.5 font-medium text-brand-500 hover:bg-brand-50">
         <input
           type="file"
           accept="image/jpeg,image/png,image/webp,image/avif"

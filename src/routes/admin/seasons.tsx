@@ -209,7 +209,7 @@ function SeasonFields({ defaults }: { defaults: SeasonDefaults }) {
           step={0.05}
           value={Number.isFinite(multiplier) ? multiplier : 1}
           onChange={(event) => setMultiplierText(event.target.value)}
-          className="ml-3 w-40 align-middle accent-maroon-700"
+          className="ml-3 w-40 align-middle accent-brand-500"
           aria-label={t.seasons.multiplier}
         />
       </p>

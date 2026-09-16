@@ -73,7 +73,7 @@ function PrivacyPage() {
       ))}
 
       <p className="mt-10 text-ink-700">
-        <a href={`mailto:${settings.email}`} className="text-maroon-700 hover:underline">
+        <a href={`mailto:${settings.email}`} className="text-brand-500 hover:underline">
           {settings.email}
         </a>
       </p>

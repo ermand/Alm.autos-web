@@ -45,9 +45,12 @@ Runs in parallel with phase 1; the human-blocked items are flagged.
 - Enquiry form → Postgres → Resend notification. WhatsApp deep link on every
   vehicle, pre-filled with the model and year.
 - SQ/EN message catalogues, `hreflang`, `sitemap.xml`, schema.org `Car`/`Offer`.
-- Redesign: warm-and-local, maroon-derived palette, existing logo.
-- **[blocked on client]** vector logo; Albanian copy review; confirmation that
-  the WATI subscription can be dropped.
+- Redesign: warm-and-local on warm neutrals, with the primary taken from the
+  client logo (#c92c2e, measured from legacy/Logo1.jpeg) and the mark itself in
+  the header, footer and favicons.
+- **[blocked on client]** vector logo — the raster mark is cut out of the old
+  JPEG and works, but a vector original would be sharper at every size;
+  Albanian copy review; confirmation that the WATI subscription can be dropped.
 
 ## Phase 2 — CMS (done)
 
