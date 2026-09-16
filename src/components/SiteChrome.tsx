@@ -1,4 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
+import { useEffect, useId, useState } from "react";
 import type { SiteSettings } from "~/domain/contact.ts";
 import { telLink, whatsappLink } from "~/domain/contact.ts";
 import { LOCALES, type Locale, messagesFor } from "~/i18n/messages.ts";
@@ -12,6 +13,24 @@ interface ChromeProps {
 export function SiteHeader({ locale, settings }: ChromeProps) {
   const t = messagesFor(locale);
   const { pathname } = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuId = useId();
+
+  // Navigating closes the menu; leaving it open over the new page is the most
+  // common mobile-menu bug.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: closing is keyed to the path, not the setter.
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
 
   const links = [
     { to: localePath(locale), label: t.nav.home },
@@ -37,12 +56,12 @@ export function SiteHeader({ locale, settings }: ChromeProps) {
             height={40}
             className="h-10 w-10 object-contain"
           />
-          {/* The mark already says ALM; the wordmark names the company for
-              anyone who has not seen it before, and for search results. */}
-          <span className="font-display text-xl text-brand-500">{t.brand}</span>
+          {/* The mark already says ALM, so below 640px it carries the name on
+              its own and the wordmark would only cost the header its room. */}
+          <span className="hidden font-display text-xl text-brand-500 sm:inline">{t.brand}</span>
         </Link>
 
-        <nav aria-label={t.nav.home} className="ml-auto hidden gap-6 md:flex">
+        <nav aria-label={t.nav.mainNav} className="ml-auto hidden gap-6 md:flex">
           {links.map((link) => (
             <Link
               key={link.to}
@@ -57,7 +76,30 @@ export function SiteHeader({ locale, settings }: ChromeProps) {
         </nav>
 
         <div className="ml-auto flex items-center gap-2 md:ml-0">
-          <ul className="flex items-center gap-1 text-xs" aria-label="Language">
+          <button
+            type="button"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-expanded={menuOpen}
+            aria-controls={menuId}
+            aria-label={menuOpen ? t.nav.closeMenu : t.nav.openMenu}
+            className="-ml-1 rounded-full p-2.5 text-ink-700 hover:bg-sand-100 md:hidden"
+          >
+            {/* Two bars that become an X: the state is visible, not just announced. */}
+            <span aria-hidden="true" className="relative block h-4 w-5">
+              <span
+                className={`absolute left-0 block h-0.5 w-5 bg-current transition-transform ${
+                  menuOpen ? "top-1.5 rotate-45" : "top-0.5"
+                }`}
+              />
+              <span
+                className={`absolute left-0 block h-0.5 w-5 bg-current transition-transform ${
+                  menuOpen ? "top-1.5 -rotate-45" : "top-3"
+                }`}
+              />
+            </span>
+          </button>
+
+          <ul className="hidden items-center gap-1 text-xs md:flex" aria-label={t.nav.language}>
             {LOCALES.map((option) => (
               <li key={option}>
                 <Link
@@ -84,18 +126,58 @@ export function SiteHeader({ locale, settings }: ChromeProps) {
         </div>
       </div>
 
-      <nav aria-label={t.nav.fleet} className="flex gap-4 overflow-x-auto px-4 pb-2 md:hidden">
-        {links.map((link) => (
-          <Link
-            key={link.to}
-            to={link.to}
-            className="whitespace-nowrap text-sm text-ink-700"
-            activeProps={{ className: "text-brand-500 font-medium" }}
-            activeOptions={{ exact: link.to === localePath(locale) }}
-          >
-            {link.label}
-          </Link>
-        ))}
+      {/*
+        A disclosure panel rather than the horizontal scroll strip this used to
+        be: a row that scrolls sideways hides its own overflow, so on a narrow
+        phone "Contact" simply was not visible and nothing said it was there.
+      */}
+      <nav
+        id={menuId}
+        aria-label={t.nav.mainNav}
+        hidden={!menuOpen}
+        className="border-t border-sand-200 md:hidden"
+      >
+        <ul className="px-2 py-2">
+          {links.map((link) => (
+            <li key={link.to}>
+              <Link
+                to={link.to}
+                className="block rounded-xl px-4 py-3 text-base text-ink-700 hover:bg-sand-100"
+                activeProps={{ className: "text-brand-500 font-medium bg-sand-100" }}
+                activeOptions={{ exact: link.to === localePath(locale) }}
+              >
+                {link.label}
+              </Link>
+            </li>
+          ))}
+          <li className="mt-1 border-t border-sand-200 pt-2">
+            <a
+              href={telLink(settings)}
+              className="block rounded-xl px-4 py-3 font-display text-lg text-brand-500"
+            >
+              {settings.phone}
+            </a>
+          </li>
+          <li className="px-4 py-2">
+            <ul className="flex items-center gap-2 text-sm" aria-label={t.nav.language}>
+              {LOCALES.map((option) => (
+                <li key={option}>
+                  <Link
+                    to={swapLocale(option)}
+                    aria-current={option === locale ? "true" : undefined}
+                    className={
+                      option === locale
+                        ? "rounded-lg bg-sand-100 px-3 py-1.5 font-semibold text-brand-500"
+                        : "rounded-lg px-3 py-1.5 text-ink-500"
+                    }
+                  >
+                    {option.toUpperCase()}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </li>
+        </ul>
       </nav>
     </header>
   );

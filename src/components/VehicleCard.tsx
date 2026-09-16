@@ -10,9 +10,16 @@ interface Props {
   vehicle: Vehicle;
   locale: Locale;
   priority?: boolean;
+  /**
+   * The card title has to sit one level below whatever heading introduces the
+   * list it is in, or the page skips a level. Directly under a page h1 that
+   * means h2; inside a section with its own h2 it means h3.
+   */
+  headingLevel?: 2 | 3;
 }
 
-export function VehicleCard({ vehicle, locale, priority }: Props) {
+export function VehicleCard({ vehicle, locale, priority, headingLevel = 2 }: Props) {
+  const Heading = headingLevel === 2 ? "h2" : "h3";
   const t = messagesFor(locale);
 
   // Specs are optional on purpose — the fleet launches partially documented, so
@@ -37,7 +44,7 @@ export function VehicleCard({ vehicle, locale, priority }: Props) {
 
         <div className="p-4">
           <div className="flex items-baseline justify-between gap-3">
-            <h3 className="font-display text-lg text-ink-900">{vehicle.model}</h3>
+            <Heading className="font-display text-lg text-ink-900">{vehicle.model}</Heading>
             <span className="text-sm text-ink-500">{vehicle.year}</span>
           </div>
 

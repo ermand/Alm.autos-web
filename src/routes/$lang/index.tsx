@@ -70,7 +70,7 @@ function HomePage() {
 
           {highlights[0] ? (
             <div className="hidden md:block">
-              <VehicleCard vehicle={highlights[0]} locale={locale} priority />
+              <VehicleCard vehicle={highlights[0]} locale={locale} priority headingLevel={2} />
             </div>
           ) : null}
         </div>
@@ -100,7 +100,7 @@ function HomePage() {
         <ul className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {highlights.map((vehicle) => (
             <li key={vehicle.id}>
-              <VehicleCard vehicle={vehicle} locale={locale} />
+              <VehicleCard vehicle={vehicle} locale={locale} headingLevel={3} />
             </li>
           ))}
         </ul>

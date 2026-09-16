@@ -26,7 +26,16 @@ export function toLocale(value: string): Locale {
 
 const en = {
   brand: "ALM Autos",
-  nav: { home: "Home", fleet: "Our cars", about: "About", contact: "Contact" },
+  nav: {
+    home: "Home",
+    fleet: "Our cars",
+    about: "About",
+    contact: "Contact",
+    openMenu: "Open menu",
+    closeMenu: "Close menu",
+    mainNav: "Main",
+    language: "Language",
+  },
   home: {
     title: "Rent a car in Tirana",
     subtitle: "Reliable cars, honest prices, and someone who picks up the phone.",
@@ -50,6 +59,8 @@ const en = {
     from: "from",
     perDay: "/day",
     empty: "No cars match those filters.",
+    showing: "{n} of {total} cars",
+    showingAll: "{total} cars",
     filters: { all: "All", transmission: "Gearbox", bodyType: "Type", reset: "Clear filters" },
   },
   vehicle: {
@@ -67,6 +78,9 @@ const en = {
     enquire: "Ask about this car",
     whatsappPrefill: "Hi, I'm interested in renting the",
     back: "All cars",
+    photoOf: "Photo {n} of {total}",
+    showPhoto: "Show photo {n}",
+    photoCount: "{n} photos",
   },
   enquiry: {
     title: "Ask about a car",
@@ -83,6 +97,12 @@ const en = {
     error: "Something went wrong. Please call or WhatsApp us instead.",
     required: "Please fill in your name, email and phone.",
     noBooking: "Sending this does not reserve a car — we will confirm availability with you.",
+    missing: "Please fill this in.",
+    badEmail: "That does not look like an email address.",
+    badPhone: "Please give a phone number we can reach you on.",
+    datesBackwards: "The return date cannot be before the pick-up date.",
+    fixFields: "Please check the highlighted fields.",
+    optional: "optional",
   },
   transmission: { manual: "Manual", automatic: "Automatic" },
   fuel: { petrol: "Petrol", diesel: "Diesel", lpg: "LPG", hybrid: "Hybrid", electric: "Electric" },
@@ -98,6 +118,18 @@ const en = {
   privacy: { title: "Privacy" },
   about: { title: "About us" },
   contact: { title: "Contact", location: "Where to find us" },
+  notFound: {
+    title: "We could not find that page",
+    body: "The link may be old, or the car may have been taken off the site.",
+    seeCars: "See all cars",
+    home: "Go to the homepage",
+  },
+  errorState: {
+    title: "Something went wrong at our end",
+    body: "It is not your fault. Try again, or call us and we will sort it out.",
+    retry: "Try again",
+  },
+  loading: "Loading…",
   yes: "Yes",
   no: "No",
 };
@@ -106,7 +138,16 @@ type Messages = typeof en;
 
 const sq: Messages = {
   brand: "ALM Autos",
-  nav: { home: "Kryefaqja", fleet: "Makinat", about: "Rreth nesh", contact: "Kontakt" },
+  nav: {
+    home: "Kryefaqja",
+    fleet: "Makinat",
+    about: "Rreth nesh",
+    contact: "Kontakt",
+    openMenu: "Hap menunë",
+    closeMenu: "Mbyll menunë",
+    mainNav: "Kryesore",
+    language: "Gjuha",
+  },
   home: {
     title: "Merr makinë me qira në Tiranë",
     subtitle: "Makina të besueshme, çmime të ndershme dhe dikush që të përgjigjet në telefon.",
@@ -130,6 +171,8 @@ const sq: Messages = {
     from: "nga",
     perDay: "/ditë",
     empty: "Asnjë makinë nuk përputhet me filtrat.",
+    showing: "{n} nga {total} makina",
+    showingAll: "{total} makina",
     filters: {
       all: "Të gjitha",
       transmission: "Marshi",
@@ -152,8 +195,17 @@ const sq: Messages = {
     enquire: "Pyet për këtë makinë",
     whatsappPrefill: "Përshëndetje, jam i interesuar të marr me qira",
     back: "Të gjitha makinat",
+    photoOf: "Fotoja {n} nga {total}",
+    showPhoto: "Shfaq foton {n}",
+    photoCount: "{n} foto",
   },
   enquiry: {
+    missing: "Ju lutemi plotësojeni.",
+    badEmail: "Kjo nuk duket si adresë email.",
+    badPhone: "Na jepni një numër ku mund t'ju gjejmë.",
+    datesBackwards: "Data e kthimit nuk mund të jetë para datës së marrjes.",
+    fixFields: "Ju lutemi kontrolloni fushat e shënuara.",
+    optional: "opsionale",
     title: "Pyet për një makinë",
     subtitle: "Na thuaj datat dhe të kthejmë përgjigje po atë ditë.",
     name: "Emri juaj",
@@ -184,6 +236,18 @@ const sq: Messages = {
   privacy: { title: "Privatësia" },
   about: { title: "Rreth nesh" },
   contact: { title: "Kontakt", location: "Ku të na gjeni" },
+  notFound: {
+    title: "Nuk e gjetëm këtë faqe",
+    body: "Lidhja mund të jetë e vjetër, ose makina mund të jetë hequr nga faqja.",
+    seeCars: "Shiko të gjitha makinat",
+    home: "Shko te kryefaqja",
+  },
+  errorState: {
+    title: "Diçka shkoi keq nga ana jonë",
+    body: "Nuk është faji juaj. Provoni përsëri, ose na telefononi dhe e rregullojmë.",
+    retry: "Provo përsëri",
+  },
+  loading: "Duke u ngarkuar…",
   yes: "Po",
   no: "Jo",
 };

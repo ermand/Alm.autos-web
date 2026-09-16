@@ -1,10 +1,10 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { EnquiryForm } from "~/components/EnquiryForm.tsx";
+import { VehicleGallery } from "~/components/VehicleGallery.tsx";
 import { whatsappLink } from "~/domain/contact.ts";
 import { formatEuros } from "~/domain/money.ts";
-import { photoSrc, photoSrcSet } from "~/domain/photos.ts";
 import { fromPriceCents, hasTieredPricing, TIERS } from "~/domain/pricing.ts";
-import { type Vehicle, vehicleTitle } from "~/domain/vehicle.ts";
+import { vehicleTitle } from "~/domain/vehicle.ts";
 import { messagesFor, toLocale } from "~/i18n/messages.ts";
 import { localePath } from "~/i18n/paths.ts";
 import { fetchVehicle } from "~/server/functions.ts";
@@ -90,7 +90,7 @@ function VehiclePage() {
 
       <div className="mt-6 grid gap-10 lg:grid-cols-[3fr_2fr]">
         <div>
-          <Gallery vehicle={vehicle} />
+          <VehicleGallery key={vehicle.id} vehicle={vehicle} locale={locale} />
         </div>
 
         <div>
@@ -175,45 +175,6 @@ function VehiclePage() {
         // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD has no other injection point.
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-    </div>
-  );
-}
-
-function Gallery({ vehicle }: { vehicle: Vehicle }) {
-  const [first, ...rest] = vehicle.photos;
-
-  if (!first) {
-    return <div className="aspect-[4/3] rounded-2xl bg-sand-200" aria-hidden="true" />;
-  }
-
-  return (
-    <div className="grid gap-3">
-      <img
-        src={photoSrc(first.path, 1600)}
-        srcSet={photoSrcSet(first.path)}
-        sizes="(min-width: 1024px) 700px, 92vw"
-        alt={vehicleTitle(vehicle)}
-        width={1600}
-        height={1200}
-        className="aspect-[4/3] w-full rounded-2xl object-cover"
-      />
-
-      {rest.length > 0 ? (
-        <ul className="grid grid-cols-4 gap-3">
-          {rest.map((photo) => (
-            <li key={photo.id}>
-              <img
-                src={photoSrc(photo.path, 400)}
-                alt=""
-                width={400}
-                height={300}
-                loading="lazy"
-                className="aspect-[4/3] w-full rounded-xl object-cover"
-              />
-            </li>
-          ))}
-        </ul>
-      ) : null}
     </div>
   );
 }

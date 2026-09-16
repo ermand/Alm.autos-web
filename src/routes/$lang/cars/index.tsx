@@ -89,10 +89,16 @@ function FleetPage() {
         ) : null}
       </div>
 
+      <p aria-live="polite" className="mt-6 text-sm text-ink-500">
+        {(filtered ? t.fleet.showing : t.fleet.showingAll)
+          .replace("{n}", String(visible.length))
+          .replace("{total}", String(vehicles.length))}
+      </p>
+
       {visible.length === 0 ? (
         <p className="mt-12 text-ink-500">{t.fleet.empty}</p>
       ) : (
-        <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((vehicle, index) => (
             <li key={vehicle.id}>
               <VehicleCard vehicle={vehicle} locale={locale} priority={index < 3} />

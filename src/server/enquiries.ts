@@ -11,16 +11,23 @@ import { getSiteSettings } from "./settings.ts";
  * when mail breaks, and emailed so the owner sees it without opening the admin.
  */
 
-export const enquiryInputSchema = z.object({
-  name: z.string().trim().min(1).max(120),
-  email: z.email().max(255),
-  phone: z.string().trim().min(4).max(40),
-  pickupDate: z.iso.date().nullable().default(null),
-  dropoffDate: z.iso.date().nullable().default(null),
-  message: z.string().trim().max(2000).nullable().default(null),
-  vehicleSlug: z.string().max(120).nullable().default(null),
-  locale: z.enum(LOCALES),
-});
+export const enquiryInputSchema = z
+  .object({
+    name: z.string().trim().min(1).max(120),
+    email: z.email().max(255),
+    phone: z.string().trim().min(4).max(40),
+    pickupDate: z.iso.date().nullable().default(null),
+    dropoffDate: z.iso.date().nullable().default(null),
+    message: z.string().trim().max(2000).nullable().default(null),
+    vehicleSlug: z.string().max(120).nullable().default(null),
+    locale: z.enum(LOCALES),
+  })
+  // The browser checks this too, but a form post is not a promise. The quote
+  // engine refuses a backwards range, so storing one would be storing junk.
+  .refine(
+    (input) => !input.pickupDate || !input.dropoffDate || input.dropoffDate >= input.pickupDate,
+    { message: "The return date cannot be before the pick-up date.", path: ["dropoffDate"] },
+  );
 
 export type EnquiryInput = z.infer<typeof enquiryInputSchema>;
 
