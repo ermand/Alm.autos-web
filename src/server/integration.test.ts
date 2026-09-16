@@ -20,7 +20,7 @@ run("admin integration", () => {
   let db: Awaited<ReturnType<typeof import("~/server/db.ts").getDb>>;
   let auth: typeof import("~/server/auth.ts");
   let media: typeof import("~/server/media.ts");
-  let enquiryOps: typeof import("~/server/admin/enquiries.ts");
+  let retention: typeof import("~/server/admin/retention.ts");
   let fleet: typeof import("~/server/fleet.ts");
 
   beforeAll(async () => {
@@ -29,7 +29,7 @@ run("admin integration", () => {
     db = dbModule.getDb();
     auth = await import("~/server/auth.ts");
     media = await import("~/server/media.ts");
-    enquiryOps = await import("~/server/admin/enquiries.ts");
+    retention = await import("~/server/admin/retention.ts");
     fleet = await import("~/server/fleet.ts");
   });
 
@@ -83,7 +83,7 @@ run("admin integration", () => {
 
   describe("enquiry retention", () => {
     it("deletes enquiries past the retention window and keeps recent ones", async () => {
-      const old = new Date(Date.now() - (enquiryOps.RETENTION_DAYS + 5) * 86_400_000);
+      const old = new Date(Date.now() - (retention.RETENTION_DAYS + 5) * 86_400_000);
 
       const [stale] = await db
         .insert(enquiries)
@@ -103,7 +103,7 @@ run("admin integration", () => {
 
       if (!stale || !fresh) throw new Error("insert failed");
 
-      await enquiryOps.purgeOldEnquiries();
+      await retention.purgeOldEnquiries();
 
       const staleRows = await db.select().from(enquiries).where(eq(enquiries.id, stale.id));
       const freshRows = await db.select().from(enquiries).where(eq(enquiries.id, fresh.id));
@@ -210,12 +210,12 @@ run("admin integration", () => {
       expect(await media.readVariant(`${basename}-800.webp`)).toBeNull();
     });
 
-    it("refuses a filename that escapes the upload directory", async () => {
-      expect(media.isSafeVariantFilename("../../etc/passwd")).toBe(false);
-      expect(media.isSafeVariantFilename("car-1-800.webp/../../x")).toBe(false);
-      expect(media.isSafeVariantFilename("car-1-800.txt")).toBe(false);
-      expect(media.isSafeVariantFilename("car-1-999.webp")).toBe(false);
-      expect(media.isSafeVariantFilename("audi-q5-2012-1-800.webp")).toBe(true);
+    it("never reads outside the upload directory", async () => {
+      // The name rule itself is unit-tested in src/domain/photos.test.ts; this
+      // checks the IO layer actually applies it before touching the disk.
+      expect(await media.readVariant("../../../../etc/passwd")).toBeNull();
+      expect(await media.readVariant("../.env")).toBeNull();
+      expect(await media.readVariant("car-1-800.txt")).toBeNull();
     });
 
     it("never reuses a photo number, so a cached URL cannot resurface", async () => {

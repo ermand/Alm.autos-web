@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { VehicleCard } from "~/components/VehicleCard.tsx";
+import { telLink, whatsappLink } from "~/domain/contact.ts";
 import { messagesFor, toLocale } from "~/i18n/messages.ts";
 import { localePath } from "~/i18n/paths.ts";
 import { fetchFleet } from "~/server/functions.ts";
-import { telLink, whatsappLink } from "~/server/settings.ts";
 
 export const Route = createFileRoute("/$lang/")({
   loader: async () => fetchFleet(),

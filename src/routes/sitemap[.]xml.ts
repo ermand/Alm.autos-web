@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LOCALES } from "~/i18n/messages.ts";
-import { listPublishedVehicles } from "~/server/fleet.ts";
 
 /**
  * Generated per request from the published fleet.
@@ -15,6 +14,9 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
+        // Imported here, not at module level: a route module is part of the
+        // client route tree, and this pulls in the Postgres driver.
+        const { listPublishedVehicles } = await import("~/server/fleet.ts");
         const origin = (process.env.SITE_URL ?? "https://alm.autos").replace(/\/$/, "");
         const vehicles = await listPublishedVehicles();
         const pages = [...STATIC_PAGES, ...vehicles.map((vehicle) => `cars/${vehicle.slug}`)];

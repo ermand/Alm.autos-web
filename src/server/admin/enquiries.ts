@@ -1,12 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
-import { desc, eq, lt } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { enquiries, vehicles } from "~/db/schema.ts";
 import { getDb } from "~/server/db.ts";
 import { requireAdmin } from "./guard.ts";
-
-/** Enquiries are personal data and are deleted twelve months after they arrive. */
-export const RETENTION_DAYS = 365;
 
 export const listEnquiries = createServerFn({ method: "GET" }).handler(async () => {
   await requireAdmin();
@@ -108,13 +105,3 @@ export const exportEnquiriesCsv = createServerFn({ method: "GET" }).handler(asyn
   // The BOM is what makes Excel read UTF-8, and Albanian needs ë and ç.
   return `﻿${[header.join(","), ...lines].join("\r\n")}\r\n`;
 });
-
-/** Called by scripts/purge-enquiries.ts from cron. */
-export async function purgeOldEnquiries(): Promise<number> {
-  const cutoff = new Date(Date.now() - RETENTION_DAYS * 86_400_000);
-  const deleted = await getDb()
-    .delete(enquiries)
-    .where(lt(enquiries.createdAt, cutoff))
-    .returning({ id: enquiries.id });
-  return deleted.length;
-}

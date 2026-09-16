@@ -1,7 +1,7 @@
 import { mkdir, readdir, readFile, unlink, writeFile } from "node:fs/promises";
 import { isAbsolute, resolve } from "node:path";
 import sharp from "sharp";
-import { VARIANT_WIDTHS } from "~/domain/photos.ts";
+import { isSafeVariantFilename, VARIANT_WIDTHS } from "~/domain/photos.ts";
 
 /**
  * Photo storage.
@@ -18,17 +18,6 @@ export function uploadsDir(): string {
     return isAbsolute(configured) ? configured : resolve(process.cwd(), configured);
   }
   return resolve(process.cwd(), ".uploads");
-}
-
-/**
- * Published variant filenames, e.g. `audi-q5-2012-1-800.webp`. Anything not
- * matching this is refused: the name arrives from a URL and is joined to a
- * filesystem path.
- */
-const VARIANT_FILENAME = /^[a-z0-9]+(?:-[a-z0-9]+)*-(?:400|800|1600)\.webp$/;
-
-export function isSafeVariantFilename(filename: string): boolean {
-  return VARIANT_FILENAME.test(filename);
 }
 
 export async function readVariant(filename: string): Promise<Buffer | null> {

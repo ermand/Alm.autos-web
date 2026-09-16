@@ -1,8 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { siteSettings } from "~/db/schema.ts";
+import { DEFAULT_SETTINGS } from "~/domain/contact.ts";
 import { getDb } from "~/server/db.ts";
-import { DEFAULT_SETTINGS, getSiteSettings } from "~/server/settings.ts";
+import { getSiteSettings } from "~/server/settings.ts";
 import { requireAdmin } from "./guard.ts";
 
 /**

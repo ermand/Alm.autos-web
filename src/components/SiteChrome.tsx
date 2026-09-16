@@ -1,8 +1,8 @@
 import { Link, useLocation } from "@tanstack/react-router";
+import type { SiteSettings } from "~/domain/contact.ts";
+import { telLink, whatsappLink } from "~/domain/contact.ts";
 import { LOCALES, type Locale, messagesFor } from "~/i18n/messages.ts";
 import { localePath, stripLocalePrefix } from "~/i18n/paths.ts";
-import type { SiteSettings } from "~/server/settings.ts";
-import { telLink, whatsappLink } from "~/server/settings.ts";
 
 interface ChromeProps {
   locale: Locale;

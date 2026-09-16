@@ -6,7 +6,7 @@
  * Retention is a promise made on the privacy page, so it has to actually run.
  */
 
-import { purgeOldEnquiries } from "~/server/admin/enquiries.ts";
+import { purgeOldEnquiries } from "~/server/admin/retention.ts";
 import { hasDatabase } from "~/server/db.ts";
 
 if (!hasDatabase()) throw new Error("DATABASE_URL is not set.");

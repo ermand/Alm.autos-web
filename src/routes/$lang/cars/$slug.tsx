@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { EnquiryForm } from "~/components/EnquiryForm.tsx";
+import { whatsappLink } from "~/domain/contact.ts";
 import { formatEuros } from "~/domain/money.ts";
 import { photoSrc, photoSrcSet } from "~/domain/photos.ts";
 import { fromPriceCents, hasTieredPricing, TIERS } from "~/domain/pricing.ts";
@@ -7,7 +8,6 @@ import { type Vehicle, vehicleTitle } from "~/domain/vehicle.ts";
 import { messagesFor, toLocale } from "~/i18n/messages.ts";
 import { localePath } from "~/i18n/paths.ts";
 import { fetchVehicle } from "~/server/functions.ts";
-import { whatsappLink } from "~/server/settings.ts";
 
 export const Route = createFileRoute("/$lang/cars/$slug")({
   loader: async ({ params }) => {

@@ -1,20 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { readVariant } from "~/server/media.ts";
 
 /**
  * Serves photo variants from the upload directory.
  *
  * A single path segment, not a splat: the router only runs server handlers on
- * an exact match, and a splat match never counts as one. Filenames are
- * validated in readVariant before touching the filesystem.
+ * an exact match, and a splat match never counts as one.
  *
- * In production nginx serves this directory directly and only falls back here;
- * the handler is what makes development and a bare `node .output` work.
+ * ~/server/media.ts is imported inside the handler rather than at module level.
+ * Route modules belong to the client route tree, and a top-level import of
+ * node:fs and sharp reaches the browser in development, where nothing strips
+ * it. Filenames are validated in readVariant before touching the filesystem.
+ *
+ * In production nginx serves this directory directly and only falls back here.
  */
 export const Route = createFileRoute("/media/$filename")({
   server: {
     handlers: {
       GET: async ({ params }) => {
+        const { readVariant } = await import("~/server/media.ts");
         const bytes = await readVariant(params.filename);
         if (!bytes) return new Response("Not found", { status: 404 });
 
