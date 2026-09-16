@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { VehicleCard } from "~/components/VehicleCard.tsx";
-import { type Locale, messagesFor } from "~/i18n/messages.ts";
+import { messagesFor, toLocale } from "~/i18n/messages.ts";
 import { localePath } from "~/i18n/paths.ts";
 import { fetchFleet } from "~/server/functions.ts";
 import { telLink, whatsappLink } from "~/server/settings.ts";
@@ -29,7 +29,7 @@ export const Route = createFileRoute("/$lang/")({
 
 function HomePage() {
   const { lang } = Route.useParams();
-  const locale = lang as Locale;
+  const locale = toLocale(lang);
   const { vehicles, settings } = Route.useLoaderData();
   const t = messagesFor(locale);
 

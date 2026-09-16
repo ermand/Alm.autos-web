@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { DEFAULT_LOCALE, isLocale, LOCALES } from "~/i18n/messages.ts";
+import { localePath, stripLocalePrefix } from "~/i18n/paths.ts";
 import appCss from "~/styles/app.css?url";
 
 export const Route = createRootRoute({
@@ -20,11 +21,14 @@ export const Route = createRootRoute({
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      // Fonts are self-hosted (src/styles/fonts.css). No third-party request is
+      // made on any page, which is what the privacy page promises.
       {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap",
+        rel: "preload",
+        href: "/fonts/inter-latin.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
       },
     ],
   }),
@@ -42,7 +46,7 @@ function RootDocument({ children }: { children: ReactNode }) {
   // every page to the homepage.
   const { pathname } = useLocation();
   const origin = import.meta.env.VITE_SITE_URL ?? "https://alm.autos";
-  const rest = pathname.replace(/^\/(en|sq)/, "");
+  const rest = stripLocalePrefix(pathname);
 
   return (
     <html lang={lang}>
@@ -53,10 +57,14 @@ function RootDocument({ children }: { children: ReactNode }) {
             key={locale}
             rel="alternate"
             hrefLang={locale}
-            href={`${origin}/${locale}${rest}`}
+            href={`${origin}${localePath(locale, rest)}`}
           />
         ))}
-        <link rel="alternate" hrefLang="x-default" href={`${origin}/en${rest}`} />
+        <link
+          rel="alternate"
+          hrefLang="x-default"
+          href={`${origin}${localePath(DEFAULT_LOCALE, rest)}`}
+        />
         <link rel="canonical" href={`${origin}${pathname}`} />
       </head>
       <body>

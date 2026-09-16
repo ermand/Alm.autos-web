@@ -1,6 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { LOCALES, type Locale, messagesFor } from "~/i18n/messages.ts";
-import { localePath } from "~/i18n/paths.ts";
+import { localePath, stripLocalePrefix } from "~/i18n/paths.ts";
 import type { SiteSettings } from "~/server/settings.ts";
 import { telLink, whatsappLink } from "~/server/settings.ts";
 
@@ -22,10 +22,7 @@ export function SiteHeader({ locale, settings }: ChromeProps) {
 
   // Swapping language keeps you on the same page, which is the whole point of
   // prefixed paths.
-  const swapLocale = (target: Locale) => {
-    const rest = pathname.replace(/^\/(en|sq)/, "");
-    return `/${target}${rest}`;
-  };
+  const swapLocale = (target: Locale) => localePath(target, stripLocalePrefix(pathname));
 
   return (
     <header className="sticky top-0 z-40 border-b border-sand-200 bg-sand-50/90 backdrop-blur">

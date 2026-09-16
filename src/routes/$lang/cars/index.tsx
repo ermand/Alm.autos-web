@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
 import { VehicleCard } from "~/components/VehicleCard.tsx";
 import { BODY_TYPES, TRANSMISSIONS } from "~/domain/vehicle.ts";
-import { type Locale, messagesFor } from "~/i18n/messages.ts";
+import { messagesFor, toLocale } from "~/i18n/messages.ts";
 import { fetchFleet } from "~/server/functions.ts";
 
 const searchSchema = z.object({
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/$lang/cars/")({
 
 function FleetPage() {
   const { lang } = Route.useParams();
-  const locale = lang as Locale;
+  const locale = toLocale(lang);
   const { vehicles } = Route.useLoaderData();
   const search = Route.useSearch();
   const t = messagesFor(locale);

@@ -1,6 +1,6 @@
 import { createFileRoute, notFound, Outlet } from "@tanstack/react-router";
 import { SiteFooter, SiteHeader } from "~/components/SiteChrome.tsx";
-import { isLocale, type Locale } from "~/i18n/messages.ts";
+import { isLocale, toLocale } from "~/i18n/messages.ts";
 import { fetchSettings } from "~/server/functions.ts";
 
 export const Route = createFileRoute("/$lang")({
@@ -16,7 +16,7 @@ export const Route = createFileRoute("/$lang")({
 function LocaleLayout() {
   const { lang } = Route.useParams();
   const { settings } = Route.useLoaderData();
-  const locale = lang as Locale;
+  const locale = toLocale(lang);
 
   return (
     <div className="flex min-h-screen flex-col">

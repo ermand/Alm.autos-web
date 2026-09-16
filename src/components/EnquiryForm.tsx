@@ -42,7 +42,10 @@ export function EnquiryForm({ locale, vehicleSlug }: Props) {
         },
       });
       setState("sent");
-    } catch {
+    } catch (error) {
+      // The visitor gets the phone and WhatsApp fallback; the cause still has
+      // to reach somewhere a human can read it.
+      console.error("Enquiry submission failed", error);
       setProblem(t.enquiry.error);
       setState("error");
     }

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { type Locale, messagesFor } from "~/i18n/messages.ts";
+import { type Locale, messagesFor, toLocale } from "~/i18n/messages.ts";
 import { fetchSettings } from "~/server/functions.ts";
 
 /** Enquiries hold personal data, so this page is a launch requirement, not a nicety. */
@@ -57,7 +57,7 @@ export const Route = createFileRoute("/$lang/privacy")({
 
 function PrivacyPage() {
   const { lang } = Route.useParams();
-  const locale = lang as Locale;
+  const locale = toLocale(lang);
   const { settings } = Route.useLoaderData();
   const t = messagesFor(locale);
 
@@ -65,7 +65,7 @@ function PrivacyPage() {
     <div className="mx-auto max-w-2xl px-4 py-16">
       <h1 className="font-display text-4xl text-ink-900">{t.privacy.title}</h1>
 
-      {SECTIONS[locale].map((section) => (
+      {(SECTIONS[locale] ?? []).map((section) => (
         <section key={section.heading} className="mt-8">
           <h2 className="font-display text-xl text-ink-900">{section.heading}</h2>
           <p className="mt-2 text-ink-700">{section.body}</p>

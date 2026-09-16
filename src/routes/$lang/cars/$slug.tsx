@@ -4,7 +4,7 @@ import { formatEuros } from "~/domain/money.ts";
 import { photoSrc, photoSrcSet } from "~/domain/photos.ts";
 import { fromPriceCents, hasTieredPricing, TIERS } from "~/domain/pricing.ts";
 import { type Vehicle, vehicleTitle } from "~/domain/vehicle.ts";
-import { type Locale, messagesFor } from "~/i18n/messages.ts";
+import { messagesFor, toLocale } from "~/i18n/messages.ts";
 import { localePath } from "~/i18n/paths.ts";
 import { fetchVehicle } from "~/server/functions.ts";
 import { whatsappLink } from "~/server/settings.ts";
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/$lang/cars/$slug")({
     const vehicle = loaderData?.vehicle;
     if (!vehicle) return {};
     const title = `${vehicleTitle(vehicle)} — ALM Autos`;
-    const price = formatEuros(fromPriceCents(vehicle.baseRates), params.lang as Locale);
+    const price = formatEuros(fromPriceCents(vehicle.baseRates), toLocale(params.lang));
     return {
       meta: [
         { title },
@@ -39,7 +39,7 @@ export const Route = createFileRoute("/$lang/cars/$slug")({
 
 function VehiclePage() {
   const { lang } = Route.useParams();
-  const locale = lang as Locale;
+  const locale = toLocale(lang);
   const { vehicle, settings } = Route.useLoaderData();
   const t = messagesFor(locale);
 
@@ -77,7 +77,8 @@ function VehiclePage() {
       "@type": "Offer",
       priceCurrency: "EUR",
       price: (fromPriceCents(vehicle.baseRates) / 100).toFixed(2),
-      availability: "https://schema.org/InStock",
+      // No availability key: the site never claims a Vehicle is free on given
+      // dates, and schema.org/InStock is exactly that claim. See docs/adr/0001.
     },
   };
 

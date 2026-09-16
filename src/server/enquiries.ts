@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
-import { enquiries } from "~/db/schema.ts";
+import { enquiries, vehicles } from "~/db/schema.ts";
 import { LOCALES } from "~/i18n/messages.ts";
 import { getDb, hasDatabase } from "./db.ts";
 import { getSiteSettings } from "./settings.ts";
@@ -77,7 +78,22 @@ export const submitEnquiry = createServerFn({ method: "POST" })
 
     if (stored) {
       const db = getDb();
+
+      // An Enquiry is a request to rent a Vehicle (CONTEXT.md), so the record
+      // has to say which one. An unknown slug stores a null rather than losing
+      // the whole lead.
+      let vehicleId: string | null = null;
+      if (data.vehicleSlug) {
+        const [match] = await db
+          .select({ id: vehicles.id })
+          .from(vehicles)
+          .where(eq(vehicles.slug, data.vehicleSlug))
+          .limit(1);
+        vehicleId = match?.id ?? null;
+      }
+
       await db.insert(enquiries).values({
+        vehicleId,
         name: data.name,
         email: data.email,
         phone: data.phone,

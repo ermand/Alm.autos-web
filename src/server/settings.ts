@@ -15,6 +15,7 @@ export interface SiteSettings {
   instagram: string;
   facebook: string;
   mapsQuery: string;
+  hours: string;
 }
 
 export const DEFAULT_SETTINGS: SiteSettings = {
@@ -26,6 +27,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   instagram: "https://instagram.com/alm_autos22",
   facebook: "",
   mapsQuery: "Tirane,Kashar,DHL (ALM Autos)",
+  hours: "",
 };
 
 export async function getSiteSettings(): Promise<SiteSettings> {

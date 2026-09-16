@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { EnquiryForm } from "~/components/EnquiryForm.tsx";
-import { type Locale, messagesFor } from "~/i18n/messages.ts";
+import { messagesFor, toLocale } from "~/i18n/messages.ts";
 import { fetchSettings } from "~/server/functions.ts";
 import { telLink, whatsappLink } from "~/server/settings.ts";
 
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/$lang/contact")({
 
 function ContactPage() {
   const { lang } = Route.useParams();
-  const locale = lang as Locale;
+  const locale = toLocale(lang);
   const { settings } = Route.useLoaderData();
   const t = messagesFor(locale);
 

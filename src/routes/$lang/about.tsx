@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { type Locale, messagesFor } from "~/i18n/messages.ts";
+import { type Locale, messagesFor, toLocale } from "~/i18n/messages.ts";
 
 const BODY: Record<Locale, string[]> = {
   en: [
@@ -18,13 +18,13 @@ export const Route = createFileRoute("/$lang/about")({ component: AboutPage });
 
 function AboutPage() {
   const { lang } = Route.useParams();
-  const locale = lang as Locale;
+  const locale = toLocale(lang);
   const t = messagesFor(locale);
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-16">
       <h1 className="font-display text-4xl text-ink-900">{t.about.title}</h1>
-      {BODY[locale].map((paragraph) => (
+      {(BODY[locale] ?? []).map((paragraph) => (
         <p key={paragraph.slice(0, 24)} className="mt-5 text-ink-700">
           {paragraph}
         </p>

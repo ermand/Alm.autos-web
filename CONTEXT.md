@@ -43,8 +43,10 @@ days. Longer rentals fall in cheaper Tiers.
 _Avoid_: Bracket, Band, Duration discount
 
 **Season**:
-A named date range across the whole Fleet carrying a Multiplier, e.g. High
-Season, 1 Jul–31 Aug, ×1.35. Seasons need not cover the year; days no Season
+A date range across the whole Fleet carrying a Multiplier, e.g. High Season,
+1 Jul–31 Aug, ×1.35. A Season recurs every year and carries no year of its own,
+so the owner sets it once; a one-off surcharge for a single named year is
+therefore not expressible. Seasons need not cover the year; days no Season
 matches use the Base Rate unchanged.
 _Avoid_: Period, Peak, Surge
 
@@ -59,8 +61,11 @@ at another.
 _Avoid_: Total, Estimate, Booking price
 
 **From price**:
-The headline figure on a Vehicle card — its cheapest Base Rate, i.e. the 30+
-day Tier, shown as "from €X/day".
+The headline figure on a Vehicle card — the cheapest of its four Base Rates,
+shown as "from €X/day". Usually that is the 30+ day Tier, but the cheapest is
+taken rather than assumed, so the card can never advertise a rate no rental
+length can actually obtain. Shown without the "from" when all four Tiers are
+equal, because then there is nothing to count up from.
 
 ### Demand
 

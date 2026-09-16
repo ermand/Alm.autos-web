@@ -8,10 +8,8 @@ import { getDb, hasDatabase } from "./db.ts";
  * on the base rate alone: quoting a surcharge the owner has not confirmed would
  * be worse than quoting none.
  */
-export const DEFAULT_SEASONS: readonly Season[] = [];
-
 export async function listSeasons(): Promise<Season[]> {
-  if (!hasDatabase()) return [...DEFAULT_SEASONS];
+  if (!hasDatabase()) return [];
 
   const rows = await getDb().select().from(seasons).orderBy(asc(seasons.position));
   return rows.map((row) => ({

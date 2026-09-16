@@ -1,5 +1,4 @@
-import { z } from "zod";
-import { type BaseRates, TIERS, type Tier } from "./pricing.ts";
+import type { BaseRates } from "./pricing.ts";
 
 /**
  * A Vehicle is one physical car the company owns. Two cars of the same make and
@@ -18,55 +17,35 @@ export type Fuel = (typeof FUELS)[number];
 export type BodyType = (typeof BODY_TYPES)[number];
 export type VehicleStatus = (typeof VEHICLE_STATUSES)[number];
 
-export const baseRatesSchema = z.object(
-  Object.fromEntries(TIERS.map((tier) => [tier, z.number().int().positive()])) as Record<
-    Tier,
-    z.ZodNumber
-  >,
-) satisfies z.ZodType<BaseRates>;
-
-/**
- * Slugs are prefilled from model and year, editable, and frozen once published so
- * that indexed URLs never break.
- */
-export const slugSchema = z
-  .string()
-  .min(1)
-  .max(120)
-  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase letters, numbers and single hyphens.");
-
-export const vehicleInputSchema = z.object({
-  slug: slugSchema,
-  model: z.string().min(1).max(120),
-  year: z
-    .number()
-    .int()
-    .min(1950)
-    .max(new Date().getUTCFullYear() + 1),
-  transmission: z.enum(TRANSMISSIONS).nullable(),
-  fuel: z.enum(FUELS).nullable(),
-  bodyType: z.enum(BODY_TYPES).nullable(),
-  seats: z.number().int().min(1).max(9).nullable(),
-  doors: z.number().int().min(2).max(6).nullable(),
-  airConditioning: z.boolean().nullable(),
-  descriptionEn: z.string().max(2000).nullable(),
-  descriptionSq: z.string().max(2000).nullable(),
-  status: z.enum(VEHICLE_STATUSES),
-  featured: z.boolean(),
-  sortOrder: z.number().int(),
-  baseRates: baseRatesSchema,
-});
-
-export type VehicleInput = z.infer<typeof vehicleInputSchema>;
-
 export interface VehiclePhoto {
   readonly id: string;
   readonly path: string;
   readonly position: number;
 }
 
-export interface Vehicle extends VehicleInput {
+export interface Vehicle {
   readonly id: string;
+  /** Prefilled from model and year, frozen once published so indexed URLs hold. */
+  readonly slug: string;
+  readonly model: string;
+  readonly year: number;
+
+  // Specs are nullable by design: the fleet launches partially documented and
+  // the owner fills these in over time.
+  readonly transmission: Transmission | null;
+  readonly fuel: Fuel | null;
+  readonly bodyType: BodyType | null;
+  readonly seats: number | null;
+  readonly doors: number | null;
+  readonly airConditioning: boolean | null;
+
+  readonly descriptionEn: string | null;
+  readonly descriptionSq: string | null;
+
+  readonly status: VehicleStatus;
+  readonly featured: boolean;
+  readonly sortOrder: number;
+  readonly baseRates: BaseRates;
   readonly photos: readonly VehiclePhoto[];
 }
 
@@ -88,12 +67,4 @@ export function compareVehicles(a: Vehicle, b: Vehicle): number {
   if (a.featured !== b.featured) return a.featured ? -1 : 1;
   if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
   return b.year - a.year;
-}
-
-export function suggestSlug(model: string, year: number): string {
-  return `${model} ${year}`
-    .toLowerCase()
-    .replace(/\+/g, "-plus-")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
 }

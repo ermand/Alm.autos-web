@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - run: bun install --frozen-lockfile
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Test
+        run: bun run test
+
+      # The build resizes 25 source photos and would OOM a small Forge box, which
+      # is the most-reported Forge/Node failure. It runs here instead.
+      # See docs/adr/0002.
+      - name: Build
+        run: bun run build
+        env:
+          SITE_URL: https://alm.autos
+          VITE_SITE_URL: https://alm.autos
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: alm-autos-build
+          path: |
+            .output
+          retention-days: 7

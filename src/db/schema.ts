@@ -104,7 +104,6 @@ export const enquiries = pgTable(
     dropoffDate: varchar("dropoff_date", { length: 10 }),
     message: text("message"),
     locale: varchar("locale", { length: 2 }).notNull(),
-    handledAt: timestamp("handled_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [index("enquiries_created_idx").on(table.createdAt)],
@@ -115,22 +114,3 @@ export const siteSettings = pgTable("site_settings", {
   key: varchar("key", { length: 60 }).primaryKey(),
   value: text("value").notNull(),
 });
-
-export const adminUsers = pgTable("admin_users", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  email: varchar("email", { length: 255 }).notNull().unique(),
-  passwordHash: text("password_hash").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-});
-
-export const adminSessions = pgTable(
-  "admin_sessions",
-  {
-    id: varchar("id", { length: 64 }).primaryKey(),
-    userId: uuid("user_id")
-      .notNull()
-      .references(() => adminUsers.id, { onDelete: "cascade" }),
-    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
-  },
-  (table) => [index("admin_sessions_user_idx").on(table.userId)],
-);

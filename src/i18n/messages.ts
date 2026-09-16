@@ -15,6 +15,15 @@ export function isLocale(value: string): value is Locale {
   return (LOCALES as readonly string[]).includes(value);
 }
 
+/**
+ * Route params are strings. The /$lang layout already 404s an unknown prefix, so
+ * the fallback here is unreachable in practice — but it keeps the conversion
+ * honest instead of asserting with a cast.
+ */
+export function toLocale(value: string): Locale {
+  return isLocale(value) ? value : DEFAULT_LOCALE;
+}
+
 const en = {
   brand: "ALM Autos",
   nav: { home: "Home", fleet: "Our cars", about: "About", contact: "Contact" },
