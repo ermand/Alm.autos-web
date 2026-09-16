@@ -64,7 +64,24 @@ Verify the site on its free `*.on-forge.com` domain. Then drop the `alm.autos`
 TTL to 300s a day ahead, switch the A record, and leave GitHub Pages serving the
 old site for a week so rollback is a DNS change rather than a rebuild.
 
-## 9. Seed
+## 9. First run
 
-Once, after the first deploy: `bun run db:migrate && bun run db:seed`.
-Seeding is idempotent and never overwrites a Vehicle that already exists.
+Once, after the first deploy, with the site environment loaded:
+
+```bash
+bun run db:migrate          # create the tables
+bun run images:build        # legacy photos -> UPLOADS_DIR (idempotent, never clears)
+bun run db:seed             # 25 vehicles; never overwrites one that exists
+bun run admin:create -- owner@alm.autos
+```
+
+`admin:create` reads the password from stdin so it stays out of shell history,
+and re-running it resets the password — that is the reset flow, deliberately.
+
+## 10. Cron
+
+Retention is a promise the privacy page makes, so it has to actually run:
+
+```
+0 3 * * * cd /home/forge/alm.autos/current && bun run db:purge-enquiries
+```

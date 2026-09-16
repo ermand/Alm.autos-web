@@ -9,6 +9,5 @@ dist
 .env.local
 .DS_Store
 src/routeTree.gen.ts
-public/vehicles
-public/sitemap.xml
-public/robots.txt
+.uploads
+.uploads-test

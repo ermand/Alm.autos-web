@@ -7,7 +7,7 @@ from Postgres.
 
 See `CONTEXT.md` for vocabulary and `docs/adr/` for the decisions behind this.
 
-## Phase 0 — Repo and infrastructure
+## Phase 0 — Repo and infrastructure (done, except provisioning)
 
 Runs in parallel with phase 1; the human-blocked items are flagged.
 
@@ -23,7 +23,7 @@ Runs in parallel with phase 1; the human-blocked items are flagged.
 - **[blocked on client]** registrar access — A record, Resend SPF/DKIM,
   Let's Encrypt DNS-01.
 
-## Phase 1 — Public site (shippable alone)
+## Phase 1 — Public site (done)
 
 - Domain types and Drizzle schema for Vehicle, Gallery, Base Rate, Tier, Season,
   Enquiry, Site Settings.
@@ -49,7 +49,7 @@ Runs in parallel with phase 1; the human-blocked items are flagged.
 - **[blocked on client]** vector logo; Albanian copy review; confirmation that
   the WATI subscription can be dropped.
 
-## Phase 2 — CMS
+## Phase 2 — CMS (done)
 
 - Single-account auth: email + password, session cookie, rate-limited. No
   self-signup, no 2FA, no self-service reset. Account created by hand.
@@ -61,9 +61,8 @@ Runs in parallel with phase 1; the human-blocked items are flagged.
 - Enquiries: inbox, CSV export, 12-month auto-deletion.
 - Site settings: phone, WhatsApp, email, address, socials, hours.
 - Slugs prefilled from model + year, editable, unique, frozen once published.
-- Regenerate `sitemap.xml` on publish. It is a static file today, correct while
-  the fleet comes from the seed, and goes stale the moment the CMS can add a
-  vehicle.
+- `sitemap.xml` and `robots.txt` are server routes generated per request from
+  the published fleet, so they cannot go stale.
 
 ## Phase 3 — Cutover
 

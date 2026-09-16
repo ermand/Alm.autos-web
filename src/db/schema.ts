@@ -104,6 +104,8 @@ export const enquiries = pgTable(
     dropoffDate: varchar("dropoff_date", { length: 10 }),
     message: text("message"),
     locale: varchar("locale", { length: 2 }).notNull(),
+    /** Set when the owner marks an Enquiry dealt with; triage only, never a booking. */
+    handledAt: timestamp("handled_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [index("enquiries_created_idx").on(table.createdAt)],
@@ -114,3 +116,29 @@ export const siteSettings = pgTable("site_settings", {
   key: varchar("key", { length: 60 }).primaryKey(),
   value: text("value").notNull(),
 });
+
+/**
+ * One owner account, created by hand with scripts/create-admin.ts. No
+ * self-signup, no 2FA, no self-service reset — a forgotten password is a phone
+ * call either way, and a lockout would be worse for a one-person business.
+ */
+export const adminUsers = pgTable("admin_users", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** `id` is a SHA-256 of the cookie token, so a database leak yields no usable session. */
+export const adminSessions = pgTable(
+  "admin_sessions",
+  {
+    id: varchar("id", { length: 64 }).primaryKey(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => adminUsers.id, { onDelete: "cascade" }),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index("admin_sessions_user_idx").on(table.userId)],
+);

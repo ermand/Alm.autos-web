@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 3000",
-    "build": "bun run scripts/process-images.ts && bun run scripts/generate-seo-files.ts && vite build",
+    "build": "vite build",
     "start": "node .output/server/index.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
@@ -16,7 +16,8 @@
     "db:studio": "drizzle-kit studio",
     "db:seed": "bun run scripts/seed.ts",
     "images:build": "bun run scripts/process-images.ts",
-    "seo:build": "bun run scripts/generate-seo-files.ts"
+    "admin:create": "bun run scripts/create-admin.ts",
+    "db:purge-enquiries": "bun run scripts/purge-enquiries.ts"
   },
   "dependencies": {
     "@tanstack/react-router": "^1.170.36",

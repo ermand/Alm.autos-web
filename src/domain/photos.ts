@@ -2,7 +2,7 @@
 export const VARIANT_WIDTHS = [400, 800, 1600] as const;
 
 export function photoSrc(basename: string, width: (typeof VARIANT_WIDTHS)[number]): string {
-  return `/vehicles/${basename}-${width}.webp`;
+  return `/media/${basename}-${width}.webp`;
 }
 
 export function photoSrcSet(basename: string): string {

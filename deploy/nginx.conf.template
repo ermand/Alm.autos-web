@@ -19,8 +19,20 @@ server {
         root {{PATH}}/public;
     }
 
-    # Hashed build assets and generated photo variants are immutable.
-    location ~* ^/(assets|vehicles|fonts)/ {
+    # Hashed build assets and self-hosted fonts ship with the release.
+    location ~* ^/(assets|fonts)/ {
+        expires 1y;
+        access_log off;
+        add_header Cache-Control "public, immutable";
+        try_files $uri @node;
+    }
+
+    # Uploaded photos live outside releases/ so a deploy cannot delete them.
+    # Point this at the same directory as UPLOADS_DIR. The trailing slashes
+    # matter. Falls back to the app, which serves the same files, so a wrong
+    # path here degrades to slower rather than broken.
+    location /media/ {
+        alias /home/forge/alm-uploads/;
         expires 1y;
         access_log off;
         add_header Cache-Control "public, immutable";
@@ -44,6 +56,7 @@ server {
         proxy_read_timeout 60s;
     }
 
+    # Phone photos are large; the app caps uploads at 20 MB.
     client_max_body_size 25m;
 
     access_log off;

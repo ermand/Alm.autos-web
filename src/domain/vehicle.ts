@@ -1,4 +1,5 @@
-import type { BaseRates } from "./pricing.ts";
+import { z } from "zod";
+import { type BaseRates, TIERS } from "./pricing.ts";
 
 /**
  * A Vehicle is one physical car the company owns. Two cars of the same make and
@@ -67,4 +68,59 @@ export function compareVehicles(a: Vehicle, b: Vehicle): number {
   if (a.featured !== b.featured) return a.featured ? -1 : 1;
   if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
   return b.year - a.year;
+}
+
+/** Lowercase, hyphen-separated, no leading or trailing hyphen. */
+export const slugSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(120)
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase letters, numbers and single hyphens.");
+
+export const baseRatesSchema = z.object(
+  Object.fromEntries(TIERS.map((tier) => [tier, z.number().int().min(0).max(10_000_00)])) as Record<
+    (typeof TIERS)[number],
+    z.ZodNumber
+  >,
+);
+
+const optionalText = (max: number) =>
+  z
+    .string()
+    .trim()
+    .max(max)
+    .nullable()
+    .transform((value) => (value === "" ? null : value));
+
+export const vehicleInputSchema = z.object({
+  slug: slugSchema,
+  model: z.string().trim().min(1).max(120),
+  year: z
+    .number()
+    .int()
+    .min(1950)
+    .max(new Date().getUTCFullYear() + 1),
+  transmission: z.enum(TRANSMISSIONS).nullable(),
+  fuel: z.enum(FUELS).nullable(),
+  bodyType: z.enum(BODY_TYPES).nullable(),
+  seats: z.number().int().min(1).max(9).nullable(),
+  doors: z.number().int().min(2).max(6).nullable(),
+  airConditioning: z.boolean().nullable(),
+  descriptionEn: optionalText(2000),
+  descriptionSq: optionalText(2000),
+  status: z.enum(VEHICLE_STATUSES),
+  featured: z.boolean(),
+  baseRates: baseRatesSchema,
+});
+
+export type VehicleInput = z.infer<typeof vehicleInputSchema>;
+
+/** Prefills the slug field in the admin; the owner can still edit it. */
+export function suggestSlug(model: string, year: number): string {
+  return `${model} ${year}`
+    .toLowerCase()
+    .replace(/\+/g, "-plus-")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 }
