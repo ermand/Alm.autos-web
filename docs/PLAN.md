@@ -64,13 +64,23 @@ Runs in parallel with phase 1; the human-blocked items are flagged.
 - `sitemap.xml` and `robots.txt` are server routes generated per request from
   the published fleet, so they cannot go stale.
 
-## Phase 3 — Cutover
+## Phase 3 — Cutover (ready to run; needs the box and DNS)
 
-- Verify on the free `*.on-forge.com` domain before touching DNS.
-- Drop TTL to 300s a day ahead, switch the A record, keep GitHub Pages live for
-  a week as rollback.
-- Self-hosted Umami. Privacy policy live in both languages.
-- Hand the client a short written guide to the CMS, in Albanian.
+Built and committed:
+
+- `scripts/cutover.sh` — a 13-stage interactive wizard covering provisioning,
+  the once-only Forge settings, verification on the `*.on-forge.com` domain,
+  the DNS switch and the rollback path.
+- Self-hosted Umami, cookieless, at `/stats` on the same origin. The app
+  refuses a remote script URL, so the privacy promise cannot be broken by a
+  config change. See `deploy/umami/`.
+- `docs/udhezues-paneli.md` — the CMS guide for the client, in Albanian.
+- Privacy policy live in both languages (shipped in phase 1).
+
+Not done, because it needs access nobody in this repo has:
+
+- **[blocked]** provisioning the Hetzner box and running the cutover. The
+  wizard is the runbook; a human with the Forge and registrar logins runs it.
 
 ## Deliberately out of scope
 

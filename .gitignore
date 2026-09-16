@@ -7,6 +7,8 @@ dist
 *.log
 .env
 .env.local
+# Written by scripts/cutover.sh: holds the database password and Resend key.
+.env.forge
 .DS_Store
 src/routeTree.gen.ts
 .uploads

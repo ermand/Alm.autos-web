@@ -66,6 +66,7 @@ function RootDocument({ children }: { children: ReactNode }) {
           href={`${origin}${localePath(DEFAULT_LOCALE, rest)}`}
         />
         <link rel="canonical" href={`${origin}${pathname}`} />
+        <UmamiScript />
       </head>
       <body>
         <a
@@ -79,4 +80,29 @@ function RootDocument({ children }: { children: ReactNode }) {
       </body>
     </html>
   );
+}
+
+/**
+ * Self-hosted Umami, or nothing at all.
+ *
+ * Both values must be set, and the script must be served from our own domain:
+ * the privacy page promises no third-party request on any page and no cookie
+ * banner, and a hosted analytics script would break both. Umami is cookieless
+ * and stores no personal data, which is what makes the promise keepable.
+ *
+ * The admin is excluded — counting the owner's own visits would only distort
+ * what the fleet pages are actually doing.
+ */
+function UmamiScript() {
+  const { pathname } = useLocation();
+  const src = import.meta.env.VITE_UMAMI_SRC;
+  const websiteId = import.meta.env.VITE_UMAMI_WEBSITE_ID;
+
+  if (!src || !websiteId || pathname.startsWith("/admin")) return null;
+  if (!src.startsWith("/")) {
+    // A remote origin here would silently reintroduce third-party tracking.
+    throw new Error("VITE_UMAMI_SRC must be a same-origin path, e.g. /stats/script.js");
+  }
+
+  return <script defer src={src} data-website-id={websiteId} />;
 }

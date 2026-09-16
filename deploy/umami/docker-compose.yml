@@ -1,0 +1,37 @@
+# Self-hosted Umami, served from /stats on the same origin as the site.
+#
+# Same origin, not a subdomain: the privacy page promises no third-party request
+# on any page, and the app refuses a VITE_UMAMI_SRC that is not a local path.
+# It also means no second certificate and no CORS.
+#
+# Umami is cookieless and stores no personal data, which is what lets the site
+# run without a consent banner.
+#
+# Requires Docker on the box (Forge does not install it):
+#   curl -fsSL https://get.docker.com | sh
+#
+# Then:
+#   cd /home/forge/umami && docker compose up -d
+services:
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    restart: unless-stopped
+    # Loopback only. nginx is the only thing that should reach it.
+    ports:
+      - "127.0.0.1:3001:3000"
+    environment:
+      # Its own database, on the Postgres that Forge already provisioned.
+      DATABASE_URL: ${UMAMI_DATABASE_URL}
+      # openssl rand -base64 32
+      APP_SECRET: ${UMAMI_APP_SECRET}
+      BASE_PATH: /stats
+      TRACKER_SCRIPT_NAME: script
+      # The owner's own visits are not signal.
+      DISABLE_TELEMETRY: "1"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/stats/api/heartbeat || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
