@@ -1,5 +1,6 @@
 import { asc, eq } from "drizzle-orm";
 import seedFleet from "~/data/fleet.seed.json" with { type: "json" };
+import photoManifest from "~/data/photo-manifest.json" with { type: "json" };
 import { vehiclePhotos, vehicles } from "~/db/schema.ts";
 import type { BaseRates } from "~/domain/pricing.ts";
 import {
@@ -50,11 +51,11 @@ function fromSeed(row: SeedRow, index: number): Vehicle {
     featured: false,
     sortOrder: index,
     baseRates: row.baseRates as unknown as BaseRates,
-    // The seed still names the old files (qera1.jpeg); the published variants are
-    // named after the slug by scripts/process-images.ts.
-    photos: row.photos.map((_source, position) => ({
+    // One source collage becomes several photos, so the count comes from the
+    // manifest that scripts/process-images.ts writes, not from the seed row.
+    photos: ((photoManifest as Record<string, string[]>)[row.slug] ?? []).map((path, position) => ({
       id: `${row.slug}-${position}`,
-      path: `${row.slug}-${position + 1}`,
+      path,
       position,
     })),
   };

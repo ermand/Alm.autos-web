@@ -9,6 +9,7 @@
 
 import { resolve } from "node:path";
 import { eq } from "drizzle-orm";
+import photoManifest from "~/data/photo-manifest.json" with { type: "json" };
 import { vehiclePhotos, vehicles } from "~/db/schema.ts";
 import type { BaseRates } from "~/domain/pricing.ts";
 import type { BodyType, Fuel, Transmission } from "~/domain/vehicle.ts";
@@ -66,14 +67,14 @@ for (const [index, row] of rows.entries()) {
 
   if (!created) throw new Error(`Insert returned no row for ${row.slug}.`);
 
-  // The published variants are named after the slug by process-images.ts.
-  await db.insert(vehiclePhotos).values(
-    row.photos.map((_source, position) => ({
-      vehicleId: created.id,
-      path: `${row.slug}-${position + 1}`,
-      position,
-    })),
-  );
+  // process-images.ts splits each collage into several photos and records the
+  // names it produced; the seed follows that rather than the source list.
+  const basenames = (photoManifest as Record<string, string[]>)[row.slug] ?? [];
+  if (basenames.length > 0) {
+    await db
+      .insert(vehiclePhotos)
+      .values(basenames.map((path, position) => ({ vehicleId: created.id, path, position })));
+  }
 
   inserted++;
 }

@@ -43,6 +43,23 @@ const en = {
     callUs: "Call us",
     whatsapp: "Message on WhatsApp",
     stepsTitle: "Three steps",
+    trust: [
+      {
+        title: "You talk to the owner",
+        body: "Not a call centre. The person who answers hands you the keys.",
+      },
+      {
+        title: "Airport pick-up",
+        body: "We meet you at Tirana airport, or you collect in Kashar.",
+      },
+      {
+        title: "The price we quote",
+        body: "No deposit games, no paperwork surprises at the counter.",
+      },
+    ],
+    fleetSize: "cars in the fleet",
+    fromPrice: "from €25 a day",
+    browseAll: "Browse all cars",
     steps: [
       {
         title: "Get in touch",
@@ -155,6 +172,20 @@ const sq: Messages = {
     callUs: "Na telefono",
     whatsapp: "Shkruaj në WhatsApp",
     stepsTitle: "Tre hapa",
+    trust: [
+      {
+        title: "Flet me pronarin",
+        body: "Jo qendër telefonike. Ai që përgjigjet është ai që të jep çelësat.",
+      },
+      {
+        title: "Marrje në aeroport",
+        body: "Të takojmë në aeroportin e Tiranës, ose e merr në Kashar.",
+      },
+      { title: "Çmimi që themi", body: "Pa lojëra me depozitën, pa surpriza në sportel." },
+    ],
+    fleetSize: "makina në flotë",
+    fromPrice: "nga 25 € në ditë",
+    browseAll: "Shiko të gjitha makinat",
     steps: [
       {
         title: "Na kontakto",
