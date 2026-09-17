@@ -27,14 +27,22 @@ Things Forge will not do for us, each a known failure mode:
 - **Nothing restarts the Node process** — not on deploy, not when environment
   variables change in the Forge UI. The deploy script restarts it explicitly,
   after `$ACTIVATE_RELEASE()`.
-- **Zero-downtime deploys can only be enabled when the site is created.**
-  Retrofitting means recreating the site, so this must be right on the first
-  provision.
-- **`npm run build` on the box is the most-reported Forge/Node failure**, and on
-  a small VPS it can swap the machine hard enough to lose SSH. Builds run in
-  GitHub Actions and ship an artifact.
+- **Zero-downtime deploys can only be enabled when the site is created.** Forge
+  turns it on for every new site by default, so it is usually nothing to do —
+  but retrofitting is impossible, so it is worth confirming on the first
+  provision rather than discovering it later.
+- **Building on the box is the most-reported Forge/Node failure**, and on a
+  small VPS it can swap the machine hard enough to lose SSH. The deploy script
+  builds there anyway, to keep the deploy to one mechanism, which is why the box
+  is specified with the room to do it. CI builds the same commit on every push,
+  so a build that cannot succeed is caught before anyone deploys it; on a small
+  box, ship CI's artifact instead.
 - **Renaming the site's primary domain renames its directory**, breaking
   hardcoded paths. Deploy scripts use `$FORGE_SITE_PATH` and
   `$FORGE_RELEASE_DIRECTORY`.
 - **Uploads must live outside `releases/`**, in a Forge shared path, or every
   deploy deletes the client's photos.
+- **Forge knows nothing about the database.** Migrations are ours to run, so the
+  deploy script runs them after activating the release and before restarting the
+  process — while the previous version is still serving, which makes additive
+  migrations safe and destructive ones a two-deploy job.

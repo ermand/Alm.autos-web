@@ -21,10 +21,19 @@ before the site does.
 
 ## 3. Site
 
-- Project type: **Static HTML / Nuxt.js / Next.js**, package manager **bun**.
+- Project type: **Other**. Not Nuxt.js and not Next.js: those two types make
+  Forge drive the build and the process for you, and this app is neither — it is
+  a Nitro app that happens to produce the same `.output` layout as Nuxt. Picking
+  one of them bets on undocumented behaviour matching ours. **Other** leaves
+  nginx, the process and the deploy script to us, which is what everything in
+  this directory is written for.
+- Package manager: **bun**, if the option is offered. Verify afterwards with
+  `which bun` over SSH — the deploy script uses it, and Forge installs Node by
+  default, not bun.
 - Select the nginx template from step 2.
-- **Once only:** enable zero-downtime deploys. Retrofitting means recreating the
-  site.
+- Leave **zero-downtime deploys** on. Forge enables it for every new site by
+  default, so this is usually nothing to do — but check, because it is
+  **creation-time only** and retrofitting means recreating the site.
 - Add a shared path for uploads (e.g. `/home/forge/alm-uploads`). Anything
   written inside `releases/` is deleted by the next deploy, including every photo
   the client has uploaded.

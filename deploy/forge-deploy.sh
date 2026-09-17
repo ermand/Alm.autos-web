@@ -28,10 +28,11 @@ bun install --frozen-lockfile --production=false
 # .output in.
 bun run build
 
-# Activate before migrating, so .env — which Forge keeps outside the release and
-# links in — is certainly in place. The old Node process is still serving at
-# this point, because nothing has restarted it yet, so a failure here aborts the
-# script with the previous version still answering requests.
+# Activate first. Forge shares .env across releases and symlinks it into each
+# one, so the environment is readable either side of this line — the reason to
+# put it here is the process: nothing has restarted yet, so the previous version
+# is still answering requests, and a failure below aborts the script with that
+# version still serving.
 $ACTIVATE_RELEASE()
 
 # Migrations run on every deploy and do nothing when there is nothing new.
