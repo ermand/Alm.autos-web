@@ -11,7 +11,8 @@ Decisions that cannot be changed after the fact are marked **once only**.
 - Create an **App Server** (a Web Server cannot host a database).
 - PostgreSQL 17. Keep the `forge` database password shown at provision — it is
   shown once.
-- At least 4 GB RAM. Builds run in CI, but Postgres, Node and nginx share the box.
+- At least 4 GB RAM. The deploy builds on the box, and Postgres, Node and nginx
+  share it.
 
 ## 2. Nginx template
 
@@ -59,9 +60,19 @@ Site → Background Processes (Supervisor):
 | Field | Value |
 | --- | --- |
 | Command | `node .output/server/index.mjs` |
-| Directory | the site's `current` path |
+| Directory | `/home/forge/<site>/current` |
 | User | `forge` |
 | Processes | 1 |
+
+**The directory is the release root, not `.output`.** The command is already
+relative to it, so pointing the directory at `current/.output` makes Supervisor
+look for `.output/.output/server/index.mjs`. It also breaks configuration: the
+app reads `.env` from its working directory, and Forge links `.env` into the
+release root — from `.output` it would find none, lose `DATABASE_URL`, and
+quietly fall back to the committed seed with a broken admin.
+
+Supervisor reports `couldn't chdir ... ENOENT` and sits in `backoff` if this
+path does not exist, which it will not until the first successful build.
 
 Note the daemon id Forge assigns and put it in the deploy script's
 `supervisorctl restart daemon-<id>:*` line. Nothing restarts the process
@@ -69,8 +80,11 @@ otherwise — not a deploy, not an environment variable change.
 
 ## 5. Environment
 
-Copy `.env.example` into Forge's Environment tab. `PORT` must match
-`{{PORT}}` in the nginx template.
+Copy `.env.example` into Forge's Environment tab.
+
+`PORT` must match the port in the nginx template's `proxy_pass` line — 3000 by
+default. It is **not** `{{PORT}}`: that Forge variable is the port nginx listens
+on, not the application's.
 
 Forge writes these as a real `.env` in the site root, and
 `src/server/config.ts` validates them at boot — a bad value stops the process

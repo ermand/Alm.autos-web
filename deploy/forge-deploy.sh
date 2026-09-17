@@ -17,9 +17,12 @@ $CREATE_RELEASE()
 
 cd "$FORGE_RELEASE_DIRECTORY"
 
-# --production=false because drizzle-kit and vite are devDependencies and both
-# are needed below.
-bun install --frozen-lockfile --production=false
+# No --production flag: bun installs devDependencies by default, and vite and
+# drizzle-kit are both devDependencies that the lines below need. Unlike npm,
+# bun's --production is a boolean, so `--production=false` is not "install
+# everything", it is a usage error that stops the deploy. Setting NODE_ENV to
+# production does not make bun skip devDependencies either.
+bun install --frozen-lockfile
 
 # Building here rather than shipping a CI artifact keeps the deploy to one
 # mechanism. It needs roughly 2 GB free: `bun run build` is the most-reported
