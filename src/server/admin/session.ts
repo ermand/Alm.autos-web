@@ -51,7 +51,12 @@ export const adminLogin = createServerFn({ method: "POST" })
     setCookie(SESSION_COOKIE, token, {
       httpOnly: true,
       sameSite: "lax",
-      secure: config().isProduction,
+      // Keyed to the scheme the site is actually served over, not to NODE_ENV.
+      // NODE_ENV is easy to leave unset on a server — it defaults to
+      // development here — and the cost of that is a session cookie sent
+      // without Secure over HTTPS. SITE_URL has to be right for canonical links
+      // and the sitemap anyway, so it is the more reliable signal.
+      secure: config().isSecureOrigin,
       path: "/",
       expires: expiresAt,
     });

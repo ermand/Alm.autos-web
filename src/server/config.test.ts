@@ -10,6 +10,24 @@ describe("parseConfig", () => {
     expect(config.SITE_URL).toBe("https://alm.autos");
   });
 
+  describe("isSecureOrigin", () => {
+    it("follows the scheme the site is served over, not NODE_ENV", () => {
+      // The case that matters: a live HTTPS site whose NODE_ENV was never set,
+      // which would otherwise drop the Secure flag from the session cookie.
+      const config = parseConfig({ SITE_URL: "https://alm.autos" });
+      expect(config.isSecureOrigin).toBe(true);
+      expect(config.isProduction).toBe(false);
+    });
+
+    it("is false for plain http, so local development can still sign in", () => {
+      expect(parseConfig({ SITE_URL: "http://localhost:3000" }).isSecureOrigin).toBe(false);
+    });
+
+    it("defaults to true, because the default SITE_URL is the live https one", () => {
+      expect(parseConfig({}).isSecureOrigin).toBe(true);
+    });
+  });
+
   it("treats a key with no value as absent, the way a .env means it", () => {
     expect(parseConfig({ DATABASE_URL: "postgres://x@localhost/db" }).hasDatabase).toBe(true);
     expect(parseConfig({ DATABASE_URL: "   " }).hasDatabase).toBe(false);

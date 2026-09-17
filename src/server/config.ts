@@ -93,6 +93,13 @@ const schema = z.object({
 
 export type ServerConfig = z.infer<typeof schema> & {
   readonly isProduction: boolean;
+  /**
+   * Whether the site is served over HTTPS, taken from SITE_URL. Used for the
+   * Secure flag on the session cookie: NODE_ENV is easy to leave unset on a
+   * server, and defaulting that to development would drop the flag on a live
+   * site. SITE_URL has to be correct for canonical links regardless.
+   */
+  readonly isSecureOrigin: boolean;
   /** Whether an enquiry can be emailed; both halves are needed or neither works. */
   readonly canSendEmail: boolean;
   readonly hasDatabase: boolean;
@@ -138,6 +145,7 @@ export function parseConfig(source: Record<string, string | undefined>): ServerC
   return Object.freeze({
     ...parsed,
     isProduction: parsed.NODE_ENV === "production",
+    isSecureOrigin: parsed.SITE_URL.startsWith("https://"),
     canSendEmail: Boolean(parsed.RESEND_API_KEY && parsed.ENQUIRY_FROM_EMAIL),
     hasDatabase: Boolean(parsed.DATABASE_URL),
     flags: Object.freeze(readFlags(source)),

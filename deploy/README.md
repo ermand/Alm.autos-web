@@ -82,9 +82,19 @@ otherwise — not a deploy, not an environment variable change.
 
 Copy `.env.example` into Forge's Environment tab.
 
-`PORT` must match the port in the nginx template's `proxy_pass` line — 3000 by
-default. It is **not** `{{PORT}}`: that Forge variable is the port nginx listens
-on, not the application's.
+Three that are easy to leave out, in the order they bite:
+
+- **`DATABASE_URL`** — without it the deploy fails at the migration step, the
+  admin refuses to run, and the public site serves the committed seed instead of
+  your data. Forge shows the `forge` user's password once at provisioning:
+  `postgres://forge:PASSWORD@127.0.0.1:5432/forge`.
+- **`PORT`** — the app defaults to 3000 and the nginx template proxies to 3000,
+  so leaving it out happens to work. Set it anyway, so the two agree by saying
+  so rather than by coincidence. It is **not** `{{PORT}}`: that Forge variable
+  is the port nginx listens on, not the application's.
+- **`NODE_ENV=production`** — no longer load-bearing for the session cookie,
+  which now follows the scheme in `SITE_URL`, but it is what the rest of the
+  Node ecosystem reads.
 
 Forge writes these as a real `.env` in the site root, and
 `src/server/config.ts` validates them at boot — a bad value stops the process
