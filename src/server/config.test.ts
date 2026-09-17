@@ -1,5 +1,22 @@
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { parseConfig } from "./config.ts";
+import { dotEnvCandidates, parseConfig } from "./config.ts";
+
+describe("dotEnvCandidates", () => {
+  it("looks in the working directory first", () => {
+    expect(dotEnvCandidates()[0]).toBe(resolve(process.cwd(), ".env"));
+  });
+
+  it("also looks upward, so a process started a level too deep still finds it", () => {
+    // Supervisor pointed at current/.output rather than current is the case
+    // this exists for: the release root, where Forge links .env, is then one or
+    // two directories above the working directory.
+    const candidates = dotEnvCandidates();
+    expect(candidates).toHaveLength(3);
+    expect(candidates[1]).toBe(resolve(process.cwd(), "../.env"));
+    expect(candidates[2]).toBe(resolve(process.cwd(), "../../.env"));
+  });
+});
 
 describe("parseConfig", () => {
   it("runs on an empty environment, because the public site does", () => {

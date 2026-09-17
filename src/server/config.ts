@@ -18,10 +18,26 @@ import { z } from "zod";
  * component needs must come through a VITE_ variable instead.
  */
 
+/**
+ * Where to look for a .env, nearest first.
+ *
+ * Normally that is the working directory. The extra levels matter on the
+ * server: the process is started by Supervisor, and if its `directory` is set a
+ * level too deep — `current/.output` rather than `current`, which is an easy
+ * mistake because the command mentions `.output` — then the release root, where
+ * Forge links .env, is one or two directories up. Without this the process
+ * starts with no configuration at all and falls back to the committed seed,
+ * which looks like a working site serving the wrong data.
+ */
+export function dotEnvCandidates(): string[] {
+  const start = process.cwd();
+  return [start, resolve(start, ".."), resolve(start, "../..")].map((dir) => resolve(dir, ".env"));
+}
+
 function loadDotEnvFile(): void {
   // CI and the build set variables themselves and ship no .env to read.
-  const file = resolve(process.cwd(), ".env");
-  if (!existsSync(file)) return;
+  const file = dotEnvCandidates().find((candidate) => existsSync(candidate));
+  if (!file) return;
 
   try {
     process.loadEnvFile(file);
