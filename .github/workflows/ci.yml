@@ -39,6 +39,16 @@ jobs:
           SITE_URL: https://alm.autos
           VITE_SITE_URL: https://alm.autos
 
+      # The route tree is generated but committed, so typecheck works on a fresh
+      # clone without a build first. The build regenerates it, so if this step
+      # finds a difference, someone added a route without regenerating.
+      - name: Route tree is up to date
+        run: |
+          if ! git diff --exit-code --stat src/routeTree.gen.ts; then
+            echo "::error::src/routeTree.gen.ts is stale. Run `bun run build` and commit the result."
+            exit 1
+          fi
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:

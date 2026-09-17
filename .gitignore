@@ -10,6 +10,5 @@ dist
 # Written by scripts/cutover.sh: holds the database password and Resend key.
 .env.forge
 .DS_Store
-src/routeTree.gen.ts
 .uploads
 .uploads-test
