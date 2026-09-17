@@ -72,35 +72,57 @@ export function PhotoManager({ vehicleId, photos }: Props) {
               key={photo.id}
               className="flex items-center gap-3 rounded-xl border border-sand-200 p-2"
             >
-              <img
-                src={photoSrc(photo.path, 400)}
-                alt=""
-                width={96}
-                height={72}
-                className="h-18 w-24 shrink-0 rounded-lg object-cover"
-              />
+              {/*
+                The position sits on the thumbnail rather than beside it: the
+                controls already fill the row, and an extra word of text pushed
+                "delete" onto a second line and made the cards uneven.
+              */}
+              <span className="relative shrink-0">
+                <img
+                  src={photoSrc(photo.path, 400)}
+                  // Position matters here, so the photo is not decorative: this
+                  // is what tells a screen reader which one the buttons act on.
+                  alt={t.vehicle.photoPosition.replace("{n}", String(index + 1))}
+                  width={96}
+                  height={72}
+                  className="h-18 w-24 rounded-lg object-cover"
+                />
+                <span
+                  aria-hidden="true"
+                  className="absolute left-1 top-1 rounded-md bg-ink-900/75 px-1.5 py-0.5 text-xs font-medium tabular-nums text-white"
+                >
+                  {index + 1}
+                </span>
+              </span>
 
               <div className="flex flex-wrap gap-1.5">
-                {index > 0 ? (
+                {index === 0 ? (
+                  /*
+                   * This slot used to hold a bare "1", which said nothing: not
+                   * that the photo is the one shown on the card, and not what
+                   * the number referred to, since no other photo was numbered.
+                   * It is a status, so it reads as a badge rather than as a
+                   * button that happens to be unavailable.
+                   */
+                  <span className="rounded-full bg-brand-50 px-3 py-1.5 text-xs font-medium text-brand-700">
+                    {t.vehicle.mainPhoto}
+                  </span>
+                ) : (
                   <QuietButton onClick={() => reorder(index, 0)} disabled={busy}>
                     {t.vehicle.makeFirst}
                   </QuietButton>
-                ) : (
-                  <span className="rounded-full bg-sand-100 px-3 py-1.5 text-xs text-ink-700">
-                    1
-                  </span>
                 )}
                 <QuietButton
                   onClick={() => reorder(index, index - 1)}
                   disabled={busy || index === 0}
                 >
-                  ↑
+                  ↑<span className="sr-only"> {t.vehicles.moveUp}</span>
                 </QuietButton>
                 <QuietButton
                   onClick={() => reorder(index, index + 1)}
                   disabled={busy || index === photos.length - 1}
                 >
-                  ↓
+                  ↓<span className="sr-only"> {t.vehicles.moveDown}</span>
                 </QuietButton>
                 <QuietButton
                   danger

@@ -101,6 +101,8 @@ export const t = {
     uploading: "Duke ngarkuar…",
     deletePhoto: "Fshi foton",
     makeFirst: "Bëje të parën",
+    mainPhoto: "Foto kryesore",
+    photoPosition: "Fotoja {n}",
     save: "Ruaj",
     saving: "Duke ruajtur…",
     saved: "U ruajt.",
