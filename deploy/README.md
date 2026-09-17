@@ -67,10 +67,24 @@ Site → Background Processes (Supervisor):
 
 | Field | Value |
 | --- | --- |
-| Command | `node /home/forge/<site>/current/.output/server/index.mjs` |
+| Command | `/usr/bin/env PORT=3000 node /home/forge/<site>/current/.output/server/index.mjs` |
 | Directory | `/home/forge/<site>/current` |
 | User | `forge` |
 | Processes | 1 |
+
+**The port belongs in this command, not in the Environment tab.** Nitro reads
+`process.env.PORT` while its entry module is being evaluated — before any code
+of ours runs, so a `.env` cannot supply it — and Supervisor does not read the
+site's `.env` in the first place. Setting `PORT` in Forge's environment changes
+nothing; the app binds 3000 regardless. `/usr/bin/env PORT=…` puts it in the
+real process environment, which is the only thing Nitro looks at.
+
+**On a server with more than one site, pick a port nobody else has.** Check with
+`ss -lntp` first. A port already in use is the worst-behaved failure here, because
+srvx discards the `EADDRINUSE`: the process exits 0, writes nothing at all, and
+Supervisor reports `BACKOFF` and then `FATAL` with an empty log. Whatever you
+choose has to match in three places — this command, `proxy_pass` in the nginx
+template, and `APP_PORT` in the deploy script.
 
 **Give the command an absolute path.** A relative `node .output/server/index.mjs`
 is resolved against the process's working directory, so it depends on the
@@ -112,10 +126,9 @@ Three that are easy to leave out, in the order they bite:
   admin refuses to run, and the public site serves the committed seed instead of
   your data. Forge shows the `forge` user's password once at provisioning:
   `postgres://forge:PASSWORD@127.0.0.1:5432/forge`.
-- **`PORT`** — the app defaults to 3000 and the nginx template proxies to 3000,
-  so leaving it out happens to work. Set it anyway, so the two agree by saying
-  so rather than by coincidence. It is **not** `{{PORT}}`: that Forge variable
-  is the port nginx listens on, not the application's.
+- **`PORT`** — **does not belong here.** It has no effect in this tab; see step 4,
+  where it goes in the Supervisor command. It is also not `{{PORT}}`: that Forge
+  variable is the port nginx listens on, not the application's.
 - **`NODE_ENV=production`** — no longer load-bearing for the session cookie,
   which now follows the scheme in `SITE_URL`, but it is what the rest of the
   Node ecosystem reads.

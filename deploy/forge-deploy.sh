@@ -13,7 +13,11 @@ set -euo pipefail
 
 DAEMON_ID=12345
 
-# Must match PORT in the site environment and proxy_pass in the nginx template.
+# Must match the PORT in the Supervisor command and proxy_pass in the nginx
+# template. Note "the Supervisor command", not the site's environment: Nitro
+# reads process.env.PORT as its entry module is evaluated, long before anything
+# of ours can load a .env, and Supervisor does not read the site's .env at all.
+# A PORT in Forge's Environment tab has no effect on which port is bound.
 APP_PORT=3000
 
 $CREATE_RELEASE()
@@ -76,10 +80,15 @@ bun run db:migrate
 if ! sudo supervisorctl restart "daemon-${DAEMON_ID}:*"; then
   echo
   echo "--- daemon-${DAEMON_ID} did not start. Its configuration: ---"
-  sudo cat "/etc/supervisor/conf.d/daemon-${DAEMON_ID}.conf" 2>&1 || true
+  # No sudo: Forge's passwordless sudo covers supervisorctl, not cat or tail,
+  # so a sudo here only prints a password prompt where the answer should be.
+  cat "/etc/supervisor/conf.d/daemon-${DAEMON_ID}.conf" 2>&1 || true
   echo
   echo "--- last 40 lines of its log: ---"
-  sudo tail -n 40 "/home/forge/.forge/daemon-${DAEMON_ID}.log" 2>&1 || true
+  tail -n 40 "/home/forge/.forge/daemon-${DAEMON_ID}.log" 2>&1 || true
+  echo
+  echo "--- and the spawn itself, which is logged elsewhere: ---"
+  tail -n 20 /var/log/supervisor/supervisord.log 2>&1 || true
   echo
   echo "--- supervisor's view: ---"
   sudo supervisorctl status "daemon-${DAEMON_ID}:*" 2>&1 || true
@@ -108,7 +117,7 @@ echo "--- is anything listening on ${APP_PORT}? ---"
 ss -lntp 2>&1 | grep -E ":${APP_PORT}\\b" || echo "nothing is listening on ${APP_PORT}"
 echo
 echo "--- last 40 lines of the daemon log: ---"
-sudo tail -n 40 "/home/forge/.forge/daemon-${DAEMON_ID}.log" 2>&1 || true
+tail -n 40 "/home/forge/.forge/daemon-${DAEMON_ID}.log" 2>&1 || true
 echo
 echo "--- supervisor's view: ---"
 sudo supervisorctl status "daemon-${DAEMON_ID}:*" 2>&1 || true

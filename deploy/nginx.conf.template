@@ -23,8 +23,9 @@
 # Set the site's web directory to /.output/public so {{PATH}} lands on the
 # built static files.
 
-# The application's port. Must match PORT in the site's environment.
-# Not a Forge variable — Forge has none for this.
+# The application's port. Must match the PORT in the Supervisor command (not the
+# site's environment — Nitro never reads that; see deploy/README.md step 4) and
+# APP_PORT in the deploy script. Not a Forge variable: Forge has none for this.
 #   proxy_pass http://127.0.0.1:3000;
 
 # ── root ──────────────────────────────────────────────────────────────────
@@ -66,7 +67,8 @@ location / {
 }
 
 location @node {
-    # 3000 is the app's own port, from PORT in the site environment.
+    # 3000 is the app's own port, from the PORT in the Supervisor command.
+    # Change it here too if another site on this server already holds 3000.
     proxy_pass http://127.0.0.1:3000;
     proxy_http_version 1.1;
     proxy_set_header Upgrade $http_upgrade;
