@@ -15,9 +15,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # The same version as .bun-version, which the lockfile format depends on:
+      # bun 1.3 cannot read a lockfileVersion 2 file and 1.4 writes one.
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version-file: .bun-version
 
       - run: bun install --frozen-lockfile
 

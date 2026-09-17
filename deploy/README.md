@@ -28,9 +28,17 @@ before the site does.
   one of them bets on undocumented behaviour matching ours. **Other** leaves
   nginx, the process and the deploy script to us, which is what everything in
   this directory is written for.
-- Package manager: **bun**, if the option is offered. Verify afterwards with
-  `which bun` over SSH — the deploy script uses it, and Forge installs Node by
-  default, not bun.
+- Package manager: **bun**, if the option is offered. Afterwards, over SSH:
+
+  ```bash
+  bun --version     # must be >= the version in .bun-version
+  bun upgrade        # if it is older
+  ```
+
+  The lockfile format is tied to bun's version — 1.4 writes `lockfileVersion 2`
+  and 1.3 cannot read it, so an older bun ignores the lockfile and then fails
+  `--frozen-lockfile` with "lockfile had changes". The deploy script checks this
+  first and tells you what to run, rather than letting the install fail.
 - Select the nginx template from step 2.
 - Leave **zero-downtime deploys** on. Forge enables it for every new site by
   default, so this is usually nothing to do — but check, because it is

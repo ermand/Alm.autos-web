@@ -17,6 +17,17 @@ $CREATE_RELEASE()
 
 cd "$FORGE_RELEASE_DIRECTORY"
 
+# The lockfile format is tied to bun's version: 1.4 writes lockfileVersion 2
+# and 1.3 cannot read it, so an older bun silently ignores the lockfile and then
+# fails --frozen-lockfile with "lockfile had changes". Say so plainly instead.
+REQUIRED_BUN="$(cat .bun-version)"
+INSTALLED_BUN="$(bun --version)"
+if [ "$(printf "%s\n%s\n" "$REQUIRED_BUN" "$INSTALLED_BUN" | sort -V | head -n1)" != "$REQUIRED_BUN" ]; then
+  echo "This server has bun $INSTALLED_BUN, but the lockfile needs $REQUIRED_BUN or newer."
+  echo "Fix it once, over SSH:  bun upgrade"
+  exit 1
+fi
+
 # No --production flag: bun installs devDependencies by default, and vite and
 # drizzle-kit are both devDependencies that the lines below need. Unlike npm,
 # bun's --production is a boolean, so `--production=false` is not "install
