@@ -67,7 +67,7 @@ Site → Background Processes (Supervisor):
 
 | Field | Value |
 | --- | --- |
-| Command | `/usr/bin/env PORT=3000 node /home/forge/<site>/current/.output/server/index.mjs` |
+| Command | `/usr/bin/env HOST=127.0.0.1 PORT=3000 node /home/forge/<site>/current/.output/server/index.mjs` |
 | Directory | `/home/forge/<site>/current` |
 | User | `forge` |
 | Processes | 1 |
@@ -78,6 +78,13 @@ of ours runs, so a `.env` cannot supply it — and Supervisor does not read the
 site's `.env` in the first place. Setting `PORT` in Forge's environment changes
 nothing; the app binds 3000 regardless. `/usr/bin/env PORT=…` puts it in the
 real process environment, which is the only thing Nitro looks at.
+
+**`HOST=127.0.0.1` keeps it behind nginx.** Left unset, srvx binds every
+interface — it says so at startup, "(all interfaces)" — which publishes the app
+on its own port to anyone who can reach the box, skipping TLS, the security
+headers and the `/media/` alias. nginx proxies to `127.0.0.1`, so binding only
+the loopback costs nothing and closes that door. Check it with `ss -lntp`: the
+address must read `127.0.0.1:<port>`, not `0.0.0.0:<port>`.
 
 **On a server with more than one site, pick a port nobody else has.** Check with
 `ss -lntp` first. A port already in use is the worst-behaved failure here, because
