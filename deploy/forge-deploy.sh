@@ -13,6 +13,9 @@ set -euo pipefail
 
 DAEMON_ID=12345
 
+# Must match PORT in the site environment and proxy_pass in the nginx template.
+APP_PORT=3000
+
 $CREATE_RELEASE()
 
 cd "$FORGE_RELEASE_DIRECTORY"
@@ -65,12 +68,11 @@ bun run db:migrate
 #
 # supervisorctl says no more than "ERROR (spawn error)" when it cannot start the
 # process, which is not enough to act on, so print what is: the daemon's own
-# config (its command and working directory) and the tail of its log. The three
-# causes, in order of how often they happen:
-#   - directory= points at current/.output rather than current, so the command,
-#     which is relative to it, resolves to .output/.output/server/index.mjs;
-#   - the directory does not exist yet, before the first successful build;
-#   - the process starts and exits, in which case the reason is in the log.
+# config — its command and working directory, where the mistake usually is —
+# and the tail of its log. It covers two different failures: the spawn itself
+# failing, which leaves the daemon log empty and writes the reason to
+# /var/log/supervisor/supervisord.log instead; and the process starting and
+# exiting inside startsecs, which leaves the reason in the daemon log.
 if ! sudo supervisorctl restart "daemon-${DAEMON_ID}:*"; then
   echo
   echo "--- daemon-${DAEMON_ID} did not start. Its configuration: ---"
@@ -83,3 +85,31 @@ if ! sudo supervisorctl restart "daemon-${DAEMON_ID}:*"; then
   sudo supervisorctl status "daemon-${DAEMON_ID}:*" 2>&1 || true
   exit 1
 fi
+
+# Supervisor reporting a started process is not the same as the site working,
+# and the gap between them is wider than it looks: srvx, which Nitro uses to
+# listen, calls `this.serve().catch(() => {})`, so anything that stops it
+# binding the port — most often the port already being held — is discarded
+# silently and the process simply exits 0. Supervisor then retries, gives up,
+# and reports BACKOFF with an empty log. Ask the app instead.
+for _ in $(seq 1 15); do
+  # No -L: "/" redirects to the default language, and a redirect is already
+  # proof the app answered. -f fails on 4xx and 5xx only, so it stays quiet here.
+  if curl -fsS -o /dev/null --max-time 5 "http://127.0.0.1:${APP_PORT}/"; then
+    echo "The app is answering on port ${APP_PORT}."
+    exit 0
+  fi
+  sleep 2
+done
+
+echo "Deployed, but nothing is answering on http://127.0.0.1:${APP_PORT}/ after 30s."
+echo
+echo "--- is anything listening on ${APP_PORT}? ---"
+ss -lntp 2>&1 | grep -E ":${APP_PORT}\\b" || echo "nothing is listening on ${APP_PORT}"
+echo
+echo "--- last 40 lines of the daemon log: ---"
+sudo tail -n 40 "/home/forge/.forge/daemon-${DAEMON_ID}.log" 2>&1 || true
+echo
+echo "--- supervisor's view: ---"
+sudo supervisorctl status "daemon-${DAEMON_ID}:*" 2>&1 || true
+exit 1
