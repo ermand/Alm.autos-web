@@ -22,6 +22,16 @@
 #
 # Set the site's web directory to /.output/public so {{PATH}} lands on the
 # built static files.
+#
+# Two things Forge's default template has that must NOT survive this edit:
+#
+#   location / { try_files $uri $uri/ =404; }
+#             returns 404 for every page, because the pages are rendered by the
+#             app and exist nowhere on disk.
+#   location = /robots.txt { ... }
+#             has no try_files, so it looks for a file that is not there. The
+#             app serves /robots.txt (and /sitemap.xml) as routes. Delete the
+#             block; the catch-all below reaches the app correctly.
 
 # The application's port. Must match the PORT in the Supervisor command (not the
 # site's environment — Nitro never reads that; see deploy/README.md step 4) and
@@ -43,10 +53,18 @@ location ^~ /.well-known/acme-challenge/ {
 
 # Hashed build output and self-hosted fonts ship with the release and never
 # change within one, so they can be cached hard and served without touching Node.
+#
+# The three security headers are repeated on purpose. add_header does not
+# accumulate across levels: a location that sets any header of its own inherits
+# none from the server block, so Cache-Control here would otherwise silently
+# drop X-Frame-Options and friends from every asset response.
 location ~* ^/(assets|fonts)/ {
     expires 1y;
     access_log off;
     add_header Cache-Control "public, immutable";
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options "nosniff";
     try_files $uri @node;
 }
 
@@ -59,6 +77,11 @@ location /media/ {
     expires 1y;
     access_log off;
     add_header Cache-Control "public, immutable";
+    # Repeated for the same reason as above — and it matters more here, because
+    # these are visitor-uploaded files being served from our own origin.
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options "nosniff";
     try_files $uri @node;
 }
 
