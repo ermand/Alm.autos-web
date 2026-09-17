@@ -1,0 +1,71 @@
+{
+  "peugeot-301-2017": ["peugeot-301-2017-1", "peugeot-301-2017-2", "peugeot-301-2017-3"],
+  "kia-sportage-2013": [
+    "kia-sportage-2013-1",
+    "kia-sportage-2013-2",
+    "kia-sportage-2013-3",
+    "kia-sportage-2013-4"
+  ],
+  "dacia-duster-2013": [
+    "dacia-duster-2013-1",
+    "dacia-duster-2013-2",
+    "dacia-duster-2013-3",
+    "dacia-duster-2013-4"
+  ],
+  "vw-golf-6-plus-2010": ["vw-golf-6-plus-2010-1", "vw-golf-6-plus-2010-2"],
+  "toyota-corolla-2005": [
+    "toyota-corolla-2005-1",
+    "toyota-corolla-2005-2",
+    "toyota-corolla-2005-3"
+  ],
+  "ford-ranger-2018": ["ford-ranger-2018-1", "ford-ranger-2018-2"],
+  "suzuki-vitara-4x4-2018": ["suzuki-vitara-4x4-2018-1", "suzuki-vitara-4x4-2018-2"],
+  "vw-touran-2005": [
+    "vw-touran-2005-1",
+    "vw-touran-2005-2",
+    "vw-touran-2005-3",
+    "vw-touran-2005-4",
+    "vw-touran-2005-5"
+  ],
+  "bmw-x3-2006": ["bmw-x3-2006-1", "bmw-x3-2006-2", "bmw-x3-2006-3", "bmw-x3-2006-4"],
+  "skoda-citigo-2014": ["skoda-citigo-2014-1", "skoda-citigo-2014-2"],
+  "audi-a4-2006": ["audi-a4-2006-1", "audi-a4-2006-2", "audi-a4-2006-3"],
+  "peugeot-boxer-van-2018": [
+    "peugeot-boxer-van-2018-1",
+    "peugeot-boxer-van-2018-2",
+    "peugeot-boxer-van-2018-3",
+    "peugeot-boxer-van-2018-4"
+  ],
+  "ford-focus-2012": ["ford-focus-2012-1", "ford-focus-2012-2", "ford-focus-2012-3"],
+  "jeep-2018": ["jeep-2018-1"],
+  "ford-kuga-2012": ["ford-kuga-2012-1"],
+  "audi-q5-2012": ["audi-q5-2012-1", "audi-q5-2012-2", "audi-q5-2012-3"],
+  "mercedes-benz-b-2013": [
+    "mercedes-benz-b-2013-1",
+    "mercedes-benz-b-2013-2",
+    "mercedes-benz-b-2013-3"
+  ],
+  "skoda-yeti-2010": [
+    "skoda-yeti-2010-1",
+    "skoda-yeti-2010-2",
+    "skoda-yeti-2010-3",
+    "skoda-yeti-2010-4"
+  ],
+  "mercedes-benz-vito-2008": [
+    "mercedes-benz-vito-2008-1",
+    "mercedes-benz-vito-2008-2",
+    "mercedes-benz-vito-2008-3",
+    "mercedes-benz-vito-2008-4"
+  ],
+  "audi-q7-2008": ["audi-q7-2008-1", "audi-q7-2008-2", "audi-q7-2008-3"],
+  "peugeot-301-2019": ["peugeot-301-2019-1"],
+  "mercedes-benz-slk-2010": [
+    "mercedes-benz-slk-2010-1",
+    "mercedes-benz-slk-2010-2",
+    "mercedes-benz-slk-2010-3",
+    "mercedes-benz-slk-2010-4"
+  ],
+  "citroen-c5-2014": ["citroen-c5-2014-1"],
+  "skoda-octavia-2015": ["skoda-octavia-2015-1"],
+  "ford-fiesta-2016": ["ford-fiesta-2016-1"]
+}

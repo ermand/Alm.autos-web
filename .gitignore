@@ -1,0 +1,14 @@
+node_modules
+.output
+.nitro
+.tanstack
+.vite
+dist
+*.log
+.env
+.env.local
+# Written by scripts/cutover.sh: holds the database password and Resend key.
+.env.forge
+.DS_Store
+.uploads
+.uploads-test

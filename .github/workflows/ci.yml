@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The same version as .bun-version, which the lockfile format depends on:
+      # bun 1.3 cannot read a lockfileVersion 2 file and 1.4 writes one.
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: .bun-version
+
+      - run: bun install --frozen-lockfile
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Test
+        run: bun run test
+
+      # The build resizes 25 source photos and would OOM a small Forge box, which
+      # is the most-reported Forge/Node failure. It runs here instead.
+      # See docs/adr/0002.
+      - name: Build
+        run: bun run build
+        env:
+          SITE_URL: https://alm.autos
+          VITE_SITE_URL: https://alm.autos
+
+      # The route tree is generated but committed, so typecheck works on a fresh
+      # clone without a build first. The build regenerates it, so if this step
+      # finds a difference, someone added a route without regenerating.
+      - name: Route tree is up to date
+        run: |
+          if ! git diff --exit-code --stat src/routeTree.gen.ts; then
+            echo "::error::src/routeTree.gen.ts is stale. Run `bun run build` and commit the result."
+            exit 1
+          fi
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: alm-autos-build
+          path: |
+            .output
+          retention-days: 7
