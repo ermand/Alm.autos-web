@@ -13,8 +13,11 @@ import { hashPassword } from "~/server/auth.ts";
  * database or filesystem: session lifecycle, retention, slug uniqueness, and
  * the photo pipeline.
  */
-const DB_URL = process.env.DATABASE_URL;
-const run = DB_URL ? describe : describe.skip;
+// Reads .env through the same config module as the app. Checking
+// process.env directly meant these skipped silently for anyone whose database
+// came from .env rather than an inline variable — which is everyone now.
+const { config } = await import("~/server/config.ts");
+const run = config().hasDatabase ? describe : describe.skip;
 
 run("admin integration", () => {
   let db: Awaited<ReturnType<typeof import("~/server/db.ts").getDb>>;
@@ -78,6 +81,84 @@ run("admin integration", () => {
 
       expect(await auth.resolveSession(token)).toBeNull();
       await db.delete(adminUsers).where(eq(adminUsers.id, user.id));
+    });
+  });
+
+  describe("account changes", () => {
+    it("changes a password so the old one stops working and the new one starts", async () => {
+      const email = `pw-${Date.now()}@test.local`;
+      const [user] = await db
+        .insert(adminUsers)
+        .values({ email, passwordHash: await hashPassword("the-original-passphrase") })
+        .returning({ id: adminUsers.id });
+      if (!user) throw new Error("no user");
+
+      await auth.updateAdminPassword(user.id, await hashPassword("a-different-passphrase"));
+      const stored = (await auth.findAdminById(user.id))?.passwordHash ?? "";
+
+      expect(await auth.verifyPassword("the-original-passphrase", stored)).toBe(false);
+      expect(await auth.verifyPassword("a-different-passphrase", stored)).toBe(true);
+
+      await db.delete(adminUsers).where(eq(adminUsers.id, user.id));
+    });
+
+    it("signs out other devices but keeps the one making the change", async () => {
+      const email = `sessions-${Date.now()}@test.local`;
+      const [user] = await db
+        .insert(adminUsers)
+        .values({ email, passwordHash: await hashPassword("a-long-enough-password") })
+        .returning({ id: adminUsers.id });
+      if (!user) throw new Error("no user");
+
+      const mine = await auth.createSession(user.id);
+      const phone = await auth.createSession(user.id);
+      const laptop = await auth.createSession(user.id);
+
+      const removed = await auth.revokeOtherSessions(user.id, mine.token);
+
+      expect(removed).toBe(2);
+      expect(await auth.resolveSession(mine.token)).not.toBeNull();
+      expect(await auth.resolveSession(phone.token)).toBeNull();
+      expect(await auth.resolveSession(laptop.token)).toBeNull();
+
+      await db.delete(adminUsers).where(eq(adminUsers.id, user.id));
+    });
+
+    it("changes the email and stores it lowercased, so one address is one account", async () => {
+      const email = `old-${Date.now()}@test.local`;
+      const [user] = await db
+        .insert(adminUsers)
+        .values({ email, passwordHash: await hashPassword("a-long-enough-password") })
+        .returning({ id: adminUsers.id });
+      if (!user) throw new Error("no user");
+
+      const next = `  NEW-${Date.now()}@Test.Local  `;
+      await auth.updateAdminEmail(user.id, next);
+
+      const found = await auth.findAdminByEmail(next.trim().toLowerCase());
+      expect(found?.id).toBe(user.id);
+      expect(found?.email).toBe(next.trim().toLowerCase());
+      // The session still resolves to the account, now under its new address.
+      expect((await auth.findAdminById(user.id))?.email).toBe(next.trim().toLowerCase());
+
+      await db.delete(adminUsers).where(eq(adminUsers.id, user.id));
+    });
+
+    it("refuses a second account on an address already taken", async () => {
+      const email = `taken-${Date.now()}@test.local`;
+      const [first] = await db
+        .insert(adminUsers)
+        .values({ email, passwordHash: await hashPassword("a-long-enough-password") })
+        .returning({ id: adminUsers.id });
+      if (!first) throw new Error("no user");
+
+      await expect(
+        db
+          .insert(adminUsers)
+          .values({ email, passwordHash: await hashPassword("another-one-here") }),
+      ).rejects.toThrow();
+
+      await db.delete(adminUsers).where(eq(adminUsers.id, first.id));
     });
   });
 

@@ -74,6 +74,13 @@ function AdminLayout() {
                 >
                   {t.nav.settings}
                 </Link>
+                <Link
+                  to="/admin/profile"
+                  activeProps={{ className: "text-brand-500 font-medium" }}
+                  className="text-ink-700 hover:text-brand-500"
+                >
+                  {t.nav.profile}
+                </Link>
               </nav>
 
               <div className="ml-auto flex items-center gap-4 text-sm">

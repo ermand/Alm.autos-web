@@ -67,7 +67,9 @@ function VehiclesPage() {
         <Notice tone="ok">{t.vehicles.empty}</Notice>
       ) : (
         <>
-          <p className="mb-3 text-sm text-ink-500">{t.vehicles.order}</p>
+          <p className="mb-3 text-sm text-ink-500">
+            {t.vehicles.editHint} {t.vehicles.order}
+          </p>
           <ul className="grid gap-3">
             {vehicles.map((vehicle, index) => {
               const photo = vehicle.photos[0];
@@ -76,36 +78,45 @@ function VehiclesPage() {
                   key={vehicle.id}
                   className="flex items-center gap-4 rounded-2xl border border-sand-200 bg-white p-3"
                 >
-                  <div className="h-16 w-24 shrink-0 overflow-hidden rounded-xl bg-sand-100">
-                    {photo ? (
-                      <img
-                        src={photoSrc(photo.path, 400)}
-                        alt=""
-                        width={96}
-                        height={64}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <span className="flex h-full items-center justify-center text-xs text-ink-500">
-                        {t.vehicles.noPhoto}
-                      </span>
-                    )}
-                  </div>
+                  {/*
+                    The photo and the whole text block are one link to the edit
+                    page. Only the model name used to be, styled as plain text,
+                    so the main thing you come here to do was invisible.
+                  */}
+                  <Link
+                    to="/admin/vehicles/$id"
+                    params={{ id: vehicle.id }}
+                    className="flex min-w-0 flex-1 items-center gap-4 rounded-xl focus-visible:outline-2"
+                  >
+                    <span className="h-16 w-24 shrink-0 overflow-hidden rounded-xl bg-sand-100">
+                      {photo ? (
+                        <img
+                          src={photoSrc(photo.path, 400)}
+                          alt=""
+                          width={96}
+                          height={64}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <span className="flex h-full items-center justify-center text-xs text-ink-500">
+                          {t.vehicles.noPhoto}
+                        </span>
+                      )}
+                    </span>
 
-                  <div className="min-w-0 flex-1">
-                    <Link
-                      to="/admin/vehicles/$id"
-                      params={{ id: vehicle.id }}
-                      className="font-medium text-ink-900 hover:text-brand-500"
-                    >
-                      {vehicle.model}
-                    </Link>
-                    <p className="text-sm text-ink-500">
-                      {vehicle.year} · {formatEuros(fromPriceCents(vehicle.baseRates), "sq")}
-                      {vehicle.featured ? ` · ${t.vehicles.featured}` : ""}
-                    </p>
-                    <p className="text-xs text-ink-500">{t.status[vehicle.status]}</p>
-                  </div>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-medium text-ink-900">{vehicle.model}</span>
+                      <span className="block text-sm text-ink-500">
+                        {vehicle.year} · {formatEuros(fromPriceCents(vehicle.baseRates), "sq")}
+                        {vehicle.featured ? ` · ${t.vehicles.featured}` : ""}
+                      </span>
+                      <span className="block text-xs text-ink-500">{t.status[vehicle.status]}</span>
+                    </span>
+
+                    <span className="hidden shrink-0 rounded-full border border-sand-200 px-3 py-1.5 text-sm text-brand-500 sm:inline">
+                      {t.vehicles.edit}
+                    </span>
+                  </Link>
 
                   <div className="flex shrink-0 flex-col gap-1">
                     <QuietButton onClick={() => move(index, -1)} disabled={busy || index === 0}>

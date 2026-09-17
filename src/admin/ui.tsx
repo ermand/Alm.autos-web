@@ -21,16 +21,24 @@ const inputClass =
 interface FieldProps {
   label: string;
   hint?: string;
+  /**
+   * Rendered inside the label, so a screen reader announces it together with
+   * the field without needing an id for aria-describedby. The wrapping label
+   * is what makes that work.
+   */
+  error?: string;
   children: ReactNode;
 }
 
-export function Field({ label, hint, children }: FieldProps) {
+export function Field({ label, hint, error, children }: FieldProps) {
   return (
     // biome-ignore lint/a11y/noLabelWithoutControl: every call site passes a control as the child, and a wrapping label needs no htmlFor.
     <label className="grid gap-1">
       <span className="text-sm text-ink-700">{label}</span>
       {children}
-      {hint ? <span className="text-xs text-ink-500">{hint}</span> : null}
+      {/* The message carries the meaning; colour only reinforces it. */}
+      {error ? <span className="text-xs text-brand-700">{error}</span> : null}
+      {hint && !error ? <span className="text-xs text-ink-500">{hint}</span> : null}
     </label>
   );
 }
@@ -41,14 +49,20 @@ interface TextInputProps {
   type?: string;
   required?: boolean;
   disabled?: boolean;
+  invalid?: boolean;
   min?: number;
   max?: number;
   step?: string;
   inputMode?: "text" | "numeric" | "decimal" | "tel" | "email" | "url";
+  /** Password managers need this to offer the right thing. */
+  autoComplete?: string;
 }
 
-export function TextInput(props: TextInputProps) {
-  return <input {...props} className={inputClass} />;
+export function TextInput({ invalid, ...props }: TextInputProps) {
+  const border = invalid ? " border-brand-500" : "";
+  return (
+    <input {...props} aria-invalid={invalid ? true : undefined} className={inputClass + border} />
+  );
 }
 
 export function TextArea({

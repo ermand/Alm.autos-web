@@ -1,6 +1,6 @@
 import { createHash, randomBytes, scrypt, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
-import { and, eq, gt, lt } from "drizzle-orm";
+import { and, eq, gt, lt, ne } from "drizzle-orm";
 import { adminSessions, adminUsers } from "~/db/schema.ts";
 import { getDb, hasDatabase } from "./db.ts";
 
@@ -121,4 +121,36 @@ export function recordFailedAttempt(key: string): void {
 
 export function clearAttempts(key: string): void {
   attempts.delete(key);
+}
+
+export async function findAdminById(id: string) {
+  const [row] = await getDb().select().from(adminUsers).where(eq(adminUsers.id, id)).limit(1);
+  return row ?? null;
+}
+
+/** Addresses are stored lowercased so the same address is one address. */
+export async function updateAdminEmail(id: string, email: string): Promise<void> {
+  await getDb()
+    .update(adminUsers)
+    .set({ email: email.trim().toLowerCase() })
+    .where(eq(adminUsers.id, id));
+}
+
+export async function updateAdminPassword(id: string, passwordHash: string): Promise<void> {
+  await getDb().update(adminUsers).set({ passwordHash }).where(eq(adminUsers.id, id));
+}
+
+/**
+ * Signs out every other device after a password change.
+ *
+ * Changing a password usually means someone believes it was known to somebody
+ * else; leaving old sessions alive would make the change cosmetic. The current
+ * session survives so the owner is not thrown out of the page he is on.
+ */
+export async function revokeOtherSessions(userId: string, currentToken: string): Promise<number> {
+  const removed = await getDb()
+    .delete(adminSessions)
+    .where(and(eq(adminSessions.userId, userId), ne(adminSessions.id, tokenHash(currentToken))))
+    .returning({ id: adminSessions.id });
+  return removed.length;
 }
