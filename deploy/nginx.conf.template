@@ -1,64 +1,83 @@
 # Forge nginx template for a TanStack Start (Nitro) site.
 #
 # Forge's first-class Node support covers Nuxt and Next only; a Nitro app needs
-# this by hand. Paste into Forge > Server > Nginx Templates, then pick it when
-# creating the site. Template edits do NOT propagate to existing sites.
-# See docs/adr/0002.
+# this by hand. See docs/adr/0002.
+#
+# HOW TO USE THIS
+#
+# Do not paste it over Forge's default template wholesale. Start from the
+# default Forge pre-fills when you create a template, keep its `listen`,
+# `server_name`, SSL and logging lines exactly as they are, and replace its
+# PHP-specific parts — the `root`, the `location /`, the `location ~ \.php$`
+# and the FastCGI block — with the ones below. Forge rewrites the listen and
+# certificate lines when it issues SSL, and a hand-written version of them is
+# how a site stops responding.
+#
+# Two Forge variables are easy to get wrong, and both were wrong here once:
+#
+#   {{PATH}}  is already the web-accessible directory, i.e. the site root plus
+#             the configured web directory. `{{PATH}}/public` doubles it up.
+#   {{PORT}}  is the port NGINX LISTENS ON, not the application's port. Using it
+#             for proxy_pass sends traffic back to nginx.
+#
+# Set the site's web directory to /.output/public so {{PATH}} lands on the
+# built static files.
 
-server {
-    listen 80;
-    listen [::]:80;
-    server_name {{DOMAINS}};
-    server_tokens off;
-    root {{PATH}}/public;
+# The application's port. Must match PORT in the site's environment.
+# Not a Forge variable — Forge has none for this.
+#   proxy_pass http://127.0.0.1:3000;
 
-    # Must stay above the proxy: Let's Encrypt HTTP-01 fails if the catch-all
-    # location swallows the challenge.
-    location ^~ /.well-known/acme-challenge/ {
-        default_type "text/plain";
-        root {{PATH}}/public;
-    }
+# ── root ──────────────────────────────────────────────────────────────────
+# Replaces Forge's `root /home/forge/<site>/public;`
+root {{PATH}};
 
-    # Hashed build assets and self-hosted fonts ship with the release.
-    location ~* ^/(assets|fonts)/ {
-        expires 1y;
-        access_log off;
-        add_header Cache-Control "public, immutable";
-        try_files $uri @node;
-    }
+# ── locations ─────────────────────────────────────────────────────────────
 
-    # Uploaded photos live outside releases/ so a deploy cannot delete them.
-    # Point this at the same directory as UPLOADS_DIR. The trailing slashes
-    # matter. Falls back to the app, which serves the same files, so a wrong
-    # path here degrades to slower rather than broken.
-    location /media/ {
-        alias /home/forge/alm-uploads/;
-        expires 1y;
-        access_log off;
-        add_header Cache-Control "public, immutable";
-        try_files $uri @node;
-    }
-
-    location / {
-        try_files $uri @node;
-    }
-
-    location @node {
-        proxy_pass http://127.0.0.1:{{PORT}};
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
-        proxy_read_timeout 60s;
-    }
-
-    # Phone photos are large; the app caps uploads at 20 MB.
-    client_max_body_size 25m;
-
-    access_log off;
-    error_log /var/log/nginx/{{SITE}}-error.log error;
+# Must stay above the proxy: Let's Encrypt HTTP-01 fails if the catch-all
+# location swallows the challenge. Not needed with DNS-01, harmless either way.
+location ^~ /.well-known/acme-challenge/ {
+    default_type "text/plain";
+    root {{PATH}};
 }
+
+# Hashed build output and self-hosted fonts ship with the release and never
+# change within one, so they can be cached hard and served without touching Node.
+location ~* ^/(assets|fonts)/ {
+    expires 1y;
+    access_log off;
+    add_header Cache-Control "public, immutable";
+    try_files $uri @node;
+}
+
+# Uploaded photos live outside releases/ so a deploy cannot delete them. Point
+# this at the same directory as UPLOADS_DIR. The trailing slashes matter.
+# Falls back to the app, which serves the same files, so a wrong path here
+# degrades to slower rather than broken.
+location /media/ {
+    alias /home/forge/alm-uploads/;
+    expires 1y;
+    access_log off;
+    add_header Cache-Control "public, immutable";
+    try_files $uri @node;
+}
+
+location / {
+    try_files $uri @node;
+}
+
+location @node {
+    # 3000 is the app's own port, from PORT in the site environment.
+    proxy_pass http://127.0.0.1:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_cache_bypass $http_upgrade;
+    proxy_read_timeout 60s;
+}
+
+# Phone photos are large; the app caps uploads at 20 MB.
+client_max_body_size 25m;

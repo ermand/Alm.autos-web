@@ -34,9 +34,23 @@ before the site does.
 - Leave **zero-downtime deploys** on. Forge enables it for every new site by
   default, so this is usually nothing to do — but check, because it is
   **creation-time only** and retrofitting means recreating the site.
-- Add a shared path for uploads (e.g. `/home/forge/alm-uploads`). Anything
-  written inside `releases/` is deleted by the next deploy, including every photo
-  the client has uploaded.
+- **Root directory: `/`.** `package.json` is at the repository root.
+- **Web directory: `/.output/public`.** Not `/public`, which is Forge's default
+  and is the source directory rather than the built one. Forge's `{{PATH}}`
+  variable is the site root plus this value, and the nginx template uses it as
+  its `root`, so this is what points nginx at the built static files. The
+  directory does not exist until the first build; nginx falls through to the app
+  until it does.
+- **Shared paths: none.** Forge shares `.env` automatically, which is the only
+  thing that needs to appear inside each release. Uploads do not: `UPLOADS_DIR`
+  is an absolute path outside the release and nginx aliases `/media/` straight
+  at it, so there is nothing to link in. The app creates the directory itself on
+  first upload.
+- **Website isolation: off.** With it on, the site runs as its own user, which
+  changes the Supervisor user in step 4 and the `sudo supervisorctl` permissions
+  the deploy script needs.
+- **Push to deploy: on** is fine, but note it now runs migrations too — every
+  push to the deployed branch migrates the production database.
 
 ## 4. Process
 
