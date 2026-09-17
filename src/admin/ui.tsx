@@ -31,9 +31,13 @@ interface FieldProps {
 }
 
 export function Field({ label, hint, error, children }: FieldProps) {
+  // content-start keeps the rows at their natural height. Without it a field
+  // sitting beside a taller one — say one with a hint next to one without —
+  // stretches to match, and the extra space goes to the rows: the input grows
+  // and drifts down, so two fields on the same line stop lining up.
   return (
     // biome-ignore lint/a11y/noLabelWithoutControl: every call site passes a control as the child, and a wrapping label needs no htmlFor.
-    <label className="grid gap-1">
+    <label className="grid content-start gap-1">
       <span className="text-sm text-ink-700">{label}</span>
       {children}
       {/* The message carries the meaning; colour only reinforces it. */}

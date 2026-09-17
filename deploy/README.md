@@ -60,7 +60,24 @@ restarts the Node process for you.
 
 ## 6. Deploy script
 
-Contents of `forge-deploy.sh`, with the real daemon id.
+Contents of `forge-deploy.sh`, with `DAEMON_ID` set to the number from step 4.
+That is the only edit it needs.
+
+It installs, builds, activates the release, **runs migrations**, and only then
+restarts the process. Forge knows nothing about the database, so migrations are
+ours to run and they run on every deploy — doing nothing when there is nothing
+new.
+
+Two things to know before a deploy that changes the schema:
+
+- Migrations run while the **previous** version is still serving, so additive
+  changes are safe and destructive ones are not. Dropping or renaming a column
+  the running code still reads needs two deploys: one that stops using it, then
+  one that drops it.
+- The build happens on the box and wants roughly 2 GB free. On a small VPS
+  `bun run build` is the most-reported Forge/Node failure and can swap the
+  machine hard enough to lose SSH. If the box is small, build in CI and copy
+  `.output` in instead.
 
 ## 7. SSL
 
@@ -75,14 +92,17 @@ old site for a week so rollback is a DNS change rather than a rebuild.
 
 ## 9. First run
 
-Once, after the first deploy, with the site environment loaded:
+The deploy script already migrated the database, so what is left is the data
+that only needs creating once. From the site's `current` directory:
 
 ```bash
-bun run db:migrate          # create the tables
 bun run images:build        # legacy photos -> UPLOADS_DIR (idempotent, never clears)
 bun run db:seed             # 25 vehicles; never overwrites one that exists
 bun run admin:create -- owner@alm.autos
 ```
+
+`images:build` writes into the shared uploads path, not into the release, so it
+survives every later deploy and never needs running again.
 
 `admin:create` reads the password from stdin so it stays out of shell history,
 and re-running it resets the password — that is the reset flow, deliberately.
