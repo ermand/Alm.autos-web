@@ -13,6 +13,7 @@ import {
   tooManyAttempts,
   verifyPassword,
 } from "~/server/auth.ts";
+import { config } from "~/server/config.ts";
 import { hasDatabase } from "~/server/db.ts";
 
 export const fetchCurrentAdmin = createServerFn({ method: "GET" }).handler(async () => {
@@ -50,7 +51,7 @@ export const adminLogin = createServerFn({ method: "POST" })
     setCookie(SESSION_COOKIE, token, {
       httpOnly: true,
       sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
+      secure: config().isProduction,
       path: "/",
       expires: expiresAt,
     });

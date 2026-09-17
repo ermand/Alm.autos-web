@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { enquiries, vehicles } from "~/db/schema.ts";
 import { LOCALES } from "~/i18n/messages.ts";
+import { config } from "./config.ts";
 import { getDb, hasDatabase } from "./db.ts";
 import { getSiteSettings } from "./settings.ts";
 
@@ -32,9 +33,8 @@ export const enquiryInputSchema = z
 export type EnquiryInput = z.infer<typeof enquiryInputSchema>;
 
 async function sendNotification(input: EnquiryInput): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY;
-  const to = process.env.ENQUIRY_NOTIFY_EMAIL ?? (await getSiteSettings()).email;
-  const from = process.env.ENQUIRY_FROM_EMAIL;
+  const { RESEND_API_KEY: apiKey, ENQUIRY_FROM_EMAIL: from, ENQUIRY_NOTIFY_EMAIL } = config();
+  const to = ENQUIRY_NOTIFY_EMAIL ?? (await getSiteSettings()).email;
 
   if (!apiKey || !from) return;
 
@@ -74,7 +74,7 @@ export const submitEnquiry = createServerFn({ method: "POST" })
   .validator(enquiryInputSchema)
   .handler(async ({ data }) => {
     const stored = hasDatabase();
-    const notifiable = Boolean(process.env.RESEND_API_KEY && process.env.ENQUIRY_FROM_EMAIL);
+    const notifiable = config().canSendEmail;
 
     // Accepting a lead we can neither store nor send would lose it silently.
     if (!stored && !notifiable) {

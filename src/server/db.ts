@@ -1,6 +1,7 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "~/db/schema.ts";
+import { config } from "./config.ts";
 
 /**
  * Lazy Postgres client. Absent DATABASE_URL is a supported state during phase 1:
@@ -12,11 +13,11 @@ let client: ReturnType<typeof postgres> | undefined;
 let db: ReturnType<typeof drizzle<typeof schema>> | undefined;
 
 export function hasDatabase(): boolean {
-  return Boolean(process.env.DATABASE_URL);
+  return config().hasDatabase;
 }
 
 export function getDb() {
-  const url = process.env.DATABASE_URL;
+  const url = config().DATABASE_URL;
   if (!url) {
     throw new Error("DATABASE_URL is not set. Call hasDatabase() before getDb().");
   }

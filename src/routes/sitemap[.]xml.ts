@@ -17,7 +17,8 @@ export const Route = createFileRoute("/sitemap.xml")({
         // Imported here, not at module level: a route module is part of the
         // client route tree, and this pulls in the Postgres driver.
         const { listPublishedVehicles } = await import("~/server/fleet.ts");
-        const origin = (process.env.SITE_URL ?? "https://alm.autos").replace(/\/$/, "");
+        const { config } = await import("~/server/config.ts");
+        const origin = config().SITE_URL;
         const vehicles = await listPublishedVehicles();
         const pages = [...STATIC_PAGES, ...vehicles.map((vehicle) => `cars/${vehicle.slug}`)];
 

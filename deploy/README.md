@@ -46,8 +46,17 @@ otherwise — not a deploy, not an environment variable change.
 
 ## 5. Environment
 
-Copy `.env.example`. `PORT` must match `{{PORT}}` in the nginx template.
-After editing any variable in the Forge UI, restart the daemon by hand.
+Copy `.env.example` into Forge's Environment tab. `PORT` must match
+`{{PORT}}` in the nginx template.
+
+Forge writes these as a real `.env` in the site root, and
+`src/server/config.ts` validates them at boot — a bad value stops the process
+with a message naming it, rather than failing on some later request. Values
+already present in the process environment win over the file, so Forge stays
+the source of truth.
+
+After editing any variable in the Forge UI, restart the daemon by hand. Nothing
+restarts the Node process for you.
 
 ## 6. Deploy script
 

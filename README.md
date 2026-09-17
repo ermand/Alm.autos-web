@@ -20,7 +20,8 @@ on Hetzner via Laravel Forge.
 
 ```bash
 bun install
-bun run images:build   # legacy photos -> .uploads (once)
+cp .env.example .env   # then edit it
+bun run images:build   # splits the legacy collages into .uploads (once)
 bun run dev
 ```
 
@@ -28,14 +29,47 @@ Without `DATABASE_URL` the fleet falls back to the committed seed in
 `src/data/fleet.seed.json`, so the public site runs with no database at all. The
 admin needs one.
 
-With a database:
+With a database, once `.env` has `DATABASE_URL`:
 
 ```bash
-export DATABASE_URL=postgres://user@127.0.0.1:5432/alm_autos
 bun run db:migrate
 bun run db:seed
 bun run admin:create -- owner@alm.autos
 ```
+
+## Configuration
+
+Every server variable is declared, validated and defaulted in one place:
+[`src/server/config.ts`](src/server/config.ts). It refuses to start on a bad
+value rather than failing at request time, and it names every problem at once.
+
+- `.env` is loaded automatically at boot via Node's own `process.loadEnvFile`,
+  so no `dotenv` dependency and no inline variables on the command line.
+- **A real environment variable always wins.** On the server Forge's
+  environment is the truth, and a stale `.env` in a release directory cannot
+  override it.
+- A key with no value means "not set", because that is what people mean when
+  they write `RESEND_API_KEY=`.
+
+### Feature flags
+
+Any `FLAG_*` variable is picked up automatically, so adding a flag is a
+deployment change rather than a code change:
+
+```
+FLAG_NEW_THING=true      ->   config().flags.NEW_THING === true
+```
+
+Unset means off, so a missing variable can never switch something on by
+accident. `true/false`, `1/0`, `yes/no` and `on/off` are all accepted; anything
+else is refused at boot rather than quietly read as off. No flags are in use
+today.
+
+### Client-side values
+
+`VITE_*` variables are baked into the bundle at build time and are public.
+Never put a secret behind a `VITE_` prefix, and remember that changing one on
+the server does nothing until the site is rebuilt.
 
 ## Checks
 

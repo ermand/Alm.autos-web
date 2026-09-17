@@ -1,7 +1,8 @@
 import { mkdir, readdir, readFile, unlink, writeFile } from "node:fs/promises";
-import { isAbsolute, resolve } from "node:path";
+import { resolve } from "node:path";
 import sharp from "sharp";
 import { isSafeVariantFilename, VARIANT_WIDTHS } from "~/domain/photos.ts";
+import { config } from "./config.ts";
 
 /**
  * Photo storage.
@@ -13,11 +14,7 @@ import { isSafeVariantFilename, VARIANT_WIDTHS } from "~/domain/photos.ts";
  */
 
 export function uploadsDir(): string {
-  const configured = process.env.UPLOADS_DIR;
-  if (configured) {
-    return isAbsolute(configured) ? configured : resolve(process.cwd(), configured);
-  }
-  return resolve(process.cwd(), ".uploads");
+  return config().UPLOADS_DIR;
 }
 
 export async function readVariant(filename: string): Promise<Buffer | null> {
