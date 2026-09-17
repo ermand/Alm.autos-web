@@ -67,19 +67,31 @@ Site → Background Processes (Supervisor):
 
 | Field | Value |
 | --- | --- |
-| Command | `node .output/server/index.mjs` |
+| Command | `node /home/forge/<site>/current/.output/server/index.mjs` |
 | Directory | `/home/forge/<site>/current` |
 | User | `forge` |
 | Processes | 1 |
 
-**The directory is the release root, not `.output`.** The command is already
-relative to it, so pointing the directory at `current/.output` makes Supervisor
-look for `.output/.output/server/index.mjs` and the process never starts.
+**Give the command an absolute path.** A relative `node .output/server/index.mjs`
+is resolved against the process's working directory, so it depends on the
+`directory` above being right *and* on `current` pointing where you think it
+does. When it does not, Node reports a path you never typed — typically
+`releases/000000/.output/server/index.mjs`, Forge's placeholder release from
+before the first deploy — and Supervisor answers `ERROR (spawn error)`, which
+says nothing about why. An absolute path resolves the symlink at load time and
+takes the working directory out of the question entirely.
 
-Symptoms, in the order you meet them: `supervisorctl restart` answers `ERROR
-(spawn error)` and fails the deploy, and `/home/forge/.forge/daemon-<id>.log`
-shows either `couldn't chdir ... ENOENT` (the directory does not exist, which it
-will not until the first successful build) or `Cannot find module`.
+**The directory is still the release root, not `.output`.** With an absolute
+command it no longer decides which file runs, but it is the process's working
+directory, and that is where the app looks for `.env` — Forge links the shared
+one into each release root.
+
+`ERROR (spawn error)` is all `supervisorctl` will tell you, and it covers two
+different failures: the spawn genuinely failing, and the process starting and
+exiting within `startsecs`. The reason is in `/home/forge/.forge/daemon-<id>.log`
+— `couldn't chdir ... ENOENT` for the first (the directory does not exist, which
+it will not until the first successful build), a crash for the second. The
+deploy script prints both the config and the log tail when the restart fails.
 
 Configuration used to break here too — the app read `.env` only from its working
 directory, so a process started in `.output` found none, lost `DATABASE_URL`,
