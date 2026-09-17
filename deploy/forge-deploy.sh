@@ -62,4 +62,24 @@ bun run db:migrate
 
 # Last, and only after everything above succeeded. Must come after
 # $ACTIVATE_RELEASE so the new code is live before the process picks it up.
-sudo supervisorctl restart "daemon-${DAEMON_ID}:*"
+#
+# supervisorctl says no more than "ERROR (spawn error)" when it cannot start the
+# process, which is not enough to act on, so print what is: the daemon's own
+# config (its command and working directory) and the tail of its log. The three
+# causes, in order of how often they happen:
+#   - directory= points at current/.output rather than current, so the command,
+#     which is relative to it, resolves to .output/.output/server/index.mjs;
+#   - the directory does not exist yet, before the first successful build;
+#   - the process starts and exits, in which case the reason is in the log.
+if ! sudo supervisorctl restart "daemon-${DAEMON_ID}:*"; then
+  echo
+  echo "--- daemon-${DAEMON_ID} did not start. Its configuration: ---"
+  sudo cat "/etc/supervisor/conf.d/daemon-${DAEMON_ID}.conf" 2>&1 || true
+  echo
+  echo "--- last 40 lines of its log: ---"
+  sudo tail -n 40 "/home/forge/.forge/daemon-${DAEMON_ID}.log" 2>&1 || true
+  echo
+  echo "--- supervisor's view: ---"
+  sudo supervisorctl status "daemon-${DAEMON_ID}:*" 2>&1 || true
+  exit 1
+fi
